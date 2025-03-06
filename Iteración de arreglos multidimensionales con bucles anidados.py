@@ -41,4 +41,4 @@ for i in range(len(ciudades)):
         for k in range(len(dias)):
             print(f"{dias[k]}: {temperaturas[i][j][k]}°C", end="  ")
         print()  # Nueva línea después de cada semana
-print ("Fin de Datos del tiempo"),
+print ("Fin de Datos del tiempo")
