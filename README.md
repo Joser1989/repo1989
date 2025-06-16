@@ -1,6 +1,5 @@
 2525 *** "PROGRAMACION-ORIENTADA A OBJETOS" - CLASS -D-UEA
 
-
 Información de la asignatura
 Institución: Universidad Estatal Amazónica (UEA)
 Carrera: Ingeniería en Tecnologías de la Información y Comunicación
