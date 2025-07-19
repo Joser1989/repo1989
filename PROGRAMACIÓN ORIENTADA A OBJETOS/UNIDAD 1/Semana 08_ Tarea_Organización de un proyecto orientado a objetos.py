@@ -1,5 +1,5 @@
 # Dashboard.py
-# Realizado por: José Ramírez
+# Desarrollado por: José Ramírez
 # Fecha: 17 de julio del 2025
 # Descripción:
 # Este archivo permite organizar y visualizar scripts del proyecto
@@ -57,7 +57,7 @@ def mostrar_menu():
 
     while True:
         print("\n===============================")
-        print("📌 BIENVENIDO A TU DASHBOARD POO  📌")
+        print("📌 Welcome to my DASHBOARD POO  📌")
         print("===============================\n")
         print("Selecciona una opción para ver el código:\n")
 
