@@ -1,5 +1,4 @@
 # Sistema de Gestión de Inventarios Ramirez
-
 # Clase Producto
 class Producto:
     def __init__(self, id, nombre, cantidad, precio):
@@ -132,3 +131,4 @@ def menu():
 
 if __name__ == "__main__":
     menu()
+
