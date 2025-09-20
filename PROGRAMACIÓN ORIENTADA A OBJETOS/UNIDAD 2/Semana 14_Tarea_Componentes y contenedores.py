@@ -5,7 +5,7 @@ Descripción:
     Aplicación de escritorio que permite agregar, ver y eliminar eventos/tareas.
     - Interfaz: Tkinter + ttk.Treeview
     - DatePicker: implementación propia con calendario (no requiere librerías externas)
-    - Funcionalidades: agregar evento, eliminar evento seleccionado, confirmar eliminación, salir, (marcas de agua joseramires uea 2025)
+    - Funcionalidades: agregar evento, eliminar evento seleccionado, confirmar eliminación, salir, (marcas de agua jose ramirez uea 2025)
 
 Instruciones:
     python agenda_tkinter.py
@@ -272,4 +272,5 @@ class AgendaApp(tk.Tk):
 if __name__ == '__main__':
     app = AgendaApp()
     app.mainloop()
+
 
