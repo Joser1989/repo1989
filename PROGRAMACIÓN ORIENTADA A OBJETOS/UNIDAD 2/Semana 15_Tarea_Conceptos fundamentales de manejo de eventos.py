@@ -1,6 +1,6 @@
 """
 todolist_tkinter.py
-Aplicaión GUI simple de ListA de Tareas usando Tkinter.
+Aplicaión GUI de ListA de Tareas usando Tkinter.
 
 Características:
 - Añadir tareas via botón o presionando Enter.
@@ -209,3 +209,4 @@ if __name__ == '__main__':
     root = tk.Tk()
     app = TodoApp(root)
     root.mainloop()
+
