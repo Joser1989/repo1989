@@ -28,7 +28,7 @@ class TodoApp:
 
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("Lista de Tareas de José Ramírez")
+        self.root.title("Lista de Tareas de José Ramírez UEA")
         self.root.geometry("480x420")
         # Evitamos redimensionamiento para mantener el layout simple
         self.root.resizable(False, False)
@@ -209,4 +209,5 @@ if __name__ == '__main__':
     root = tk.Tk()
     app = TodoApp(root)
     root.mainloop()
+
 
