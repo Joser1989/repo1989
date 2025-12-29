@@ -5,7 +5,7 @@ using System.Linq;
 namespace AgendaTelefonica
 {
     // ============================================================================
-    // CLASE CONTACTO
+    // CLASE CONTACTO POR JOSÉ & SANTIAGO RAMÍREZ.
     // Representa un contacto individual en la agenda telefónica
     // Implementa encapsulación con propiedades validadas
     // ============================================================================
