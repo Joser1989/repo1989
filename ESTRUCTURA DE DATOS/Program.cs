@@ -488,11 +488,11 @@ namespace EjerciciosListasEnlazadasweek6
             Console.WriteLine("╔════════════════════════════════════════════════════╗");
             Console.WriteLine("║  EJERCICIO #1: ESTACIONAMIENTO - ING. SISTEMAS    ║");
             Console.WriteLine("╚════════════════════════════════════════════════════╝");
-            Console.WriteLine("\n a) Agregar vehículo");
-            Console.WriteLine(" b) Buscar vehículo por placa");
-            Console.WriteLine(" c) Ver vehículos por año");
-            Console.WriteLine(" d) Ver todos los vehículos registrados");
-            Console.WriteLine(" e) Eliminar vehículo");
+            Console.WriteLine("\n 1. Agregar vehículo");
+            Console.WriteLine(" 2. Buscar vehículo por placa");
+            Console.WriteLine(" 3. Ver vehículos por año");
+            Console.WriteLine(" 4. Ver todos los vehículos registrados");
+            Console.WriteLine(" 5. Eliminar vehículo");
             Console.WriteLine(" 6. Volver al menú principal");
             Console.Write("\n Seleccione una opción (1-6): ");
         }
@@ -599,11 +599,11 @@ namespace EjerciciosListasEnlazadasweek6
             Console.WriteLine("╔════════════════════════════════════════════════╗");
             Console.WriteLine("║   EJERCICIO #2: SISTEMA DE REDES III           ║");
             Console.WriteLine("╚════════════════════════════════════════════════╝");
-            Console.WriteLine("\n a) Agregar estudiante");
-            Console.WriteLine(" b) Buscar estudiante por cédula");
-            Console.WriteLine(" c) Eliminar estudiante");
-            Console.WriteLine(" d) Total estudiantes aprobados");
-            Console.WriteLine(" e) Total estudiantes reprobados");
+            Console.WriteLine("\n 1. Agregar estudiante");
+            Console.WriteLine(" 2. Buscar estudiante por cédula");
+            Console.WriteLine(" 3. Eliminar estudiante");
+            Console.WriteLine(" 4. Total estudiantes aprobados");
+            Console.WriteLine(" 5. Total estudiantes reprobados");
             Console.WriteLine(" 6. Mostrar todos los estudiantes");
             Console.WriteLine(" 7. Volver al menú principal");
             Console.Write("\n Seleccione una opción (1-7): ");
@@ -669,4 +669,5 @@ namespace EjerciciosListasEnlazadasweek6
             }
         }
     }
+
 }
