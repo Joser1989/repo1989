@@ -5,7 +5,7 @@ using System.Linq;
 namespace SistemaColaParqueDiversiones
 {
     /// <summary>
-    /// Clase que representa a una persona en la cola de la atracción
+    /// Clase que representa a una persona en la cola del parque de atracciones.
     /// </summary>
     public class Persona
     {
@@ -402,3 +402,4 @@ namespace SistemaColaParqueDiversiones
         }
     }
 }
+
