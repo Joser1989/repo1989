@@ -63,7 +63,7 @@ namespace CampanaVacunacion
             // ================================================================
 
             Separador('=', 65);
-            Console.WriteLine("   MINISTERIO DE SALUD - CAMPAÑA DE VACUNACIÓN COVID-19");
+            Console.WriteLine("   MINISTERIO DE SALUD PUBLICA DEL ECUADOR - CAMPAÑA DE VACUNACIÓN COVID-19");
             Separador('=', 65);
 
             Console.WriteLine($"\n  Universo total de ciudadanos   : {ciudadanos.Count}");
@@ -143,4 +143,5 @@ namespace CampanaVacunacion
             Console.WriteLine(new string(caracter, longitud));
         }
     }
+
 }
