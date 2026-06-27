@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AL WORK - Ropa de Trabajo</title>
+
+  <!-- ── BOOTSTRAP 5 CDN ── -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- ── CSS3 PERSONALIZADO ── -->
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; color: #222; }
+
+    /* ── VARIABLES DE COLOR ── */
+    :root {
+      --color-dark: #1a1a2e;
+      --color-mid:  #16213e;
+      --color-gold: #f5c518;
+      --color-light: #f4f4f4;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--color-dark);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; }
+    .header-brand img {
+      width: 72px; height: 72px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: var(--color-dark);
+      padding: 4px;
+      box-shadow: 0 0 0 3px var(--color-gold), 0 0 0 7px rgba(245,197,24,0.25);
+    }
+    header h1 { font-size: 1.6rem; letter-spacing: 2px; color: var(--color-gold); text-transform: uppercase; margin: 0; }
+    header h1 span { color: #fff; font-weight: 300; }
+    .header-slogan { color: #aaa; font-size: 0.82rem; letter-spacing: 1px; }
+
+    /* ── NAVBAR BOOTSTRAP ── */
+    .navbar-alwork { background: var(--color-mid) !important; }
+    .navbar-alwork .nav-link {
+      color: #ddd !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.88rem;
+      padding: 12px 18px !important;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .navbar-alwork .nav-link:hover,
+    .navbar-alwork .nav-link.active {
+      color: var(--color-gold) !important;
+      border-bottom: 3px solid var(--color-gold);
+    }
+    .navbar-toggler { border-color: var(--color-gold); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ── HERO / INICIO ── */
+    #inicio {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: #fff;
+      padding: 80px 24px 70px;
+      text-align: center;
+    }
+    #inicio h2 {
+      font-size: 2.6rem;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 18px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    #inicio p { font-size: 1.1rem; max-width: 640px; margin: 0 auto 32px; color: #ccc; line-height: 1.8; }
+    .btn-hero {
+      background: var(--color-gold);
+      color: var(--color-dark);
+      padding: 14px 40px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+    }
+    .btn-hero:hover { background: #e0b015; transform: translateY(-2px); color: var(--color-dark); }
+
+    /* ── SECCIONES ── */
+    .sec-title {
+      font-size: 1.8rem;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      position: relative;
+      padding-bottom: 12px;
+    }
+    .sec-title::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 54px; height: 4px;
+      background: var(--color-gold);
+      border-radius: 2px;
+    }
+    .sec-title.text-center::after { left: 50%; transform: translateX(-50%); }
+
+    /* ── QUIÉNES SOMOS ── */
+    #quienes { padding: 60px 0; }
+    #quienes img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: contain;
+      background: #fafafa;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+    #quienes p { line-height: 1.85; color: #444; margin-top: 14px; }
+
+    /* ── PRODUCTOS / CARDS ── */
+    #productos { background: var(--color-light); padding: 60px 0; }
+    .prod-card-aw {
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.10);
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+    }
+    .prod-card-aw:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+    .prod-card-aw img { height: 220px; object-fit: contain; padding: 16px; background: #fafafa; }
+    .prod-card-aw .card-body { border-top: 3px solid var(--color-gold); }
+    .prod-card-aw .card-title { font-size: 0.97rem; color: var(--color-dark); font-weight: 700; }
+    .prod-card-aw .card-text { font-size: 0.85rem; color: #666; }
+    .precio-tag { color: var(--color-gold); font-weight: 700; font-size: 1rem; }
+
+    /* ── VIDEO + ASIDE ── */
+    .video-aside-wrap { padding: 50px 0; }
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-sec-title {
+      font-size: 1.7rem;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      position: relative;
+      padding-bottom: 12px;
+    }
+    .video-sec-title::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 54px; height: 4px;
+      background: var(--color-gold);
+      border-radius: 2px;
+    }
+
+    /* ── ASIDE ── */
+    .aside-alwork {
+      background: var(--color-dark);
+      color: #fff;
+      border-radius: 10px;
+      padding: 28px 22px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+    }
+    .aside-alwork h3 {
+      font-size: 1rem;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--color-gold);
+    }
+    .promo-badge {
+      background: var(--color-gold);
+      color: var(--color-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 5px 12px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .aside-alwork p { font-size: 0.88rem; color: #ccc; line-height: 1.7; margin-bottom: 12px; }
+    .horario-item { display: flex; justify-content: space-between; font-size: 0.85rem; color: #ddd; padding: 6px 0; border-bottom: 1px solid #2a2a4e; }
+    .horario-item:last-child { border-bottom: none; }
+    .horario-item span:last-child { color: var(--color-gold); font-weight: 600; }
+    .tecnica-tag {
+      background: var(--color-mid);
+      border-left: 3px solid var(--color-gold);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.84rem;
+      color: #ddd;
+      margin-bottom: 8px;
+    }
+
+    /* ── COTIZADOR (SECCIÓN DINÁMICA) ── */
+    #cotizador { background: #f0f2f5; padding: 60px 0; }
+    #cotizador .sec-title { color: var(--color-dark); }
+
+    .cotizador-form-wrap {
+      background: var(--color-dark);
+      border-radius: 12px;
+      padding: 32px 28px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    }
+    .cotizador-form-wrap label { color: #ccc; font-size: 0.88rem; margin-bottom: 4px; }
+    .cotizador-form-wrap .form-control,
+    .cotizador-form-wrap .form-select {
+      background: #16213e;
+      border: 1px solid #2a3a5e;
+      color: #fff;
+      border-radius: 6px;
+    }
+    .cotizador-form-wrap .form-control::placeholder { color: #888; }
+    .cotizador-form-wrap .form-control:focus,
+    .cotizador-form-wrap .form-select:focus {
+      background: #1e2d4e;
+      border-color: var(--color-gold);
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(245,197,24,0.25);
+    }
+    .cotizador-form-wrap .form-select option { background: #16213e; color: #fff; }
+    .cotizador-form-wrap .form-control.is-invalid,
+    .cotizador-form-wrap .form-select.is-invalid { border-color: #dc3545; }
+    .cotizador-form-wrap .form-control.is-valid,
+    .cotizador-form-wrap .form-select.is-valid { border-color: #198754; }
+
+    /* Contador */
+    .contador-wrap {
+      background: var(--color-dark);
+      border-radius: 10px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    }
+    .contador-label { color: #ccc; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    .contador-numero {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--color-gold);
+      line-height: 1;
+    }
+
+    /* Tarjetas de pedido */
+    .pedido-card {
+      border: none;
+      border-radius: 10px;
+      border-top: 4px solid var(--color-gold);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pedido-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; }
+    .pedido-nombre { color: var(--color-dark); font-size: 1rem; margin-top: 6px; }
+    .pedido-desc { color: #666; font-size: 0.87rem; line-height: 1.6; }
+    .btn-eliminar { font-size: 0.82rem; font-weight: 600; }
+
+    /* Mensaje vacío */
+    #mensajeVacio {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 0.95rem;
+    }
+
+    /* ── CONTACTO ── */
+    #contacto { background: var(--color-dark); padding: 60px 0; color: #fff; }
+    #contacto .sec-title { color: #fff; }
+    #contacto .sec-title::after { background: var(--color-gold); }
+    .contacto-info h4 { color: var(--color-gold); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .contacto-info p, .contacto-info a { font-size: 0.92rem; color: #ccc; text-decoration: none; display: block; line-height: 1.8; }
+    .contacto-info a:hover { color: var(--color-gold); }
+
+    /* Redes */
+    .redes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .red-link {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--color-mid); color: #fff !important;
+      padding: 9px 14px; border-radius: 6px;
+      text-decoration: none; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+      border: 1px solid #2a3a5e;
+    }
+    .red-link:hover { background: var(--color-gold); color: var(--color-dark) !important; transform: translateY(-2px); }
+    .red-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ── FORMULARIO CONTACTO ── */
+    .form-alwork .form-control, .form-alwork .form-select {
+      background: #16213e;
+      border: 1px solid #2a3a5e;
+      color: #fff;
+      border-radius: 6px;
+    }
+    .form-alwork .form-control:focus {
+      background: #1e2d4e;
+      border-color: var(--color-gold);
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(245,197,24,0.25);
+    }
+    .form-alwork .form-control::placeholder { color: #888; }
+    .form-alwork label { color: #ccc; font-size: 0.88rem; margin-bottom: 4px; }
+    .btn-send {
+      background: var(--color-gold);
+      color: var(--color-dark);
+      font-weight: 700;
+      border: none;
+      padding: 12px 36px;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-send:hover { background: #e0b015; transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer { background: #0d0d1a; color: #888; text-align: center; padding: 28px 24px; font-size: 0.87rem; line-height: 1.9; }
+    footer strong { color: var(--color-gold); }
+
+    /* ── DIVIDER ── */
+    .section-divider { height: 4px; background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-dark) 100%); }
+
+    /* ── MEDIA QUERIES ── */
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.2rem; }
+      #inicio h2 { font-size: 1.7rem; letter-spacing: 1px; }
+      #inicio { padding: 50px 16px 40px; }
+      .video-aside-wrap .row > div:last-child { margin-top: 24px; }
+      .cotizador-form-wrap { padding: 22px 16px; }
+    }
+    @media (max-width: 480px) {
+      header { padding: 12px 14px; }
+      .header-brand img { width: 56px; height: 56px; }
+      header h1 { font-size: 1rem; }
+      #inicio h2 { font-size: 1.4rem; }
+      .sec-title { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════
+     HEADER
+═══════════════════════════ -->
+<header>
+  <div class="header-brand">
+    <img src="img/logo_gold.png" alt="Logo AL WORK" />
+    <div>
+      <h1>AL <span>WORK</span></h1>
+      <p class="header-slogan">Ropa de Trabajo</p>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════
+     NAVBAR BOOTSTRAP
+═══════════════════════════ -->
+<nav class="navbar navbar-expand-lg navbar-alwork">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menuPrincipal">
+      <ul class="navbar-nav mx-auto gap-1">
+        <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="#quienes">Quiénes Somos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#productos">Productos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#cotizador">Cotizador</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════
+     MAIN
+═══════════════════════════ -->
+<main>
+
+  <!-- INICIO / HERO -->
+  <section id="inicio">
+    <div class="container">
+      <h2>Viste con Identidad,<br/>Trabaja con Estilo</h2>
+      <p>En AL WORK diseñamos y comercializamos ropa de trabajo y uniformes corporativos de alta calidad para empresas, equipos y profesionales del Ecuador.</p>
+      <a href="#productos" class="btn-hero">Ver Productos</a>
+      &nbsp;
+      <a href="#contacto" class="btn btn-outline-light ms-2 px-4 py-3 fw-bold">Contáctanos</a>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- QUIÉNES SOMOS -->
+  <section id="quienes">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h2 class="sec-title">Quiénes Somos</h2>
+          <p><strong>AL WORK</strong> es una empresa ecuatoriana dedicada a la fabricación y comercialización de ropa de trabajo, uniformes corporativos y prendas personalizadas para empresas, instituciones y equipos deportivos. Nació con la misión de ofrecer prendas que combinen funcionalidad, durabilidad y diseño profesional, adaptadas a las necesidades reales del trabajador moderno.</p>
+          <p>Contamos con una amplia línea de productos que incluye camisas de trabajo, polos corporativos, chalecos de seguridad y uniformes completos. Cada prenda es elaborada con materiales de primera calidad, garantizando comodidad durante largas jornadas laborales. Trabajamos con empresas de distintos sectores: construcción, logística, industria, servicios y más.</p>
+          <p>En AL WORK creemos que vestir bien en el trabajo no es un lujo, es una necesidad. Por eso ofrecemos personalización con <strong>DTF</strong>, <strong>Vinil Textil</strong> y <strong>Bordados</strong> para que tu equipo luzca unido y profesional en todo el Ecuador.</p>
+          <div class="d-flex gap-3 mt-4 flex-wrap">
+            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
+              <div style="font-size:1.8rem; font-weight:700;">8+</div>
+              <div style="font-size:0.78rem; color:#ccc;">Años de experiencia</div>
+            </div>
+            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
+              <div style="font-size:1.8rem; font-weight:700;">500+</div>
+              <div style="font-size:0.78rem; color:#ccc;">Clientes satisfechos</div>
+            </div>
+            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
+              <div style="font-size:1.8rem; font-weight:700;">3</div>
+              <div style="font-size:0.78rem; color:#ccc;">Técnicas de personalización</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <img src="img/polo5.jpg" alt="Polo rojo y negro AL WORK" class="img-fluid" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- PRODUCTOS -->
+  <section id="productos">
+    <div class="container">
+      <h2 class="sec-title text-center">Nuestros Productos</h2>
+      <p class="text-center text-muted mt-3 mb-4">Todos nuestros modelos están disponibles en tallas S a XXXL con personalización incluida.</p>
+      <div class="row g-4">
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo1.png" class="card-img-top" alt="Polo Corporativo Manga Larga" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Corporativo Manga Larga</h5>
+              <p class="card-text">Ideal para equipos industriales y de logística. Tela dry-fit resistente.</p>
+              <p class="precio-tag">$18.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo2.jpg" class="card-img-top" alt="Polo Técnico Manga Corta" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Técnico Manga Corta</h5>
+              <p class="card-text">Corte ergonómico, alta transpirabilidad, perfecto para trabajo en campo.</p>
+              <p class="precio-tag">$15.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo3.jpg" class="card-img-top" alt="Polo Corporativo con Detalles" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Corporativo con Detalles</h5>
+              <p class="card-text">Diseño moderno con franjas decorativas y bordado de logo incluido.</p>
+              <p class="precio-tag">$16.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo4.jpg" class="card-img-top" alt="Polo Tricolor Corporativo" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Tricolor Corporativo</h5>
+              <p class="card-text">Tres bloques de color, ideal para uniformes empresariales llamativos.</p>
+              <p class="precio-tag">$17.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo5.jpg" class="card-img-top" alt="Polo Bicolor Trabajo Pesado" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Bicolor Trabajo Pesado</h5>
+              <p class="card-text">Refuerzos en hombros, tejido anti-desgarro para entornos exigentes.</p>
+              <p class="precio-tag">$19.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo6.png" class="card-img-top" alt="Polo Sport Blanco" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Sport Blanco</h5>
+              <p class="card-text">Elegante y funcional, apto para oficina y eventos corporativos.</p>
+              <p class="precio-tag">$16.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo7.jpg" class="card-img-top" alt="Polo Premium Tricolor" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Premium Tricolor</h5>
+              <p class="card-text">Diseño exclusivo azul, gris y negro. Tela piqué de alta gama con bordado o DTF.</p>
+              <p class="precio-tag">$22.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card prod-card-aw">
+            <img src="img/polo8.jpg" class="card-img-top" alt="Polo Corporativo Azul Royal" />
+            <div class="card-body">
+              <h5 class="card-title">Polo Corporativo Azul Royal</h5>
+              <p class="card-text">Color azul intenso con paneles blancos. Ideal para uniformes de equipo.</p>
+              <p class="precio-tag">$17.00</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- VIDEO + ASIDE -->
+  <div class="video-aside-wrap">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <article class="video-section">
+            <h2 class="video-sec-title">Nuestro Trabajo</h2>
+            <p class="text-muted mt-3 mb-3">Conoce más sobre uniformes corporativos y ropa de trabajo personalizada. La imagen de tu empresa comienza con la vestimenta de tu equipo.</p>
+            <div class="video-wrap">
+              <iframe
+                src="https://www.youtube.com/embed/0pOHgbcVbY4"
+                title="Ropa de trabajo y uniformes corporativos"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </article>
+        </div>
+        <div class="col-lg-4">
+          <aside class="aside-alwork">
+            <h3>⭐ Promociones</h3>
+            <span class="promo-badge">¡OFERTA DEL MES!</span>
+            <p>Pedidos de <strong style="color:#f5c518;">10 o más prendas</strong> obtienen un <strong style="color:#f5c518;">15% de descuento</strong> en personalización.</p>
+
+            <h3 style="margin-top:20px;">🕐 Horarios</h3>
+            <div class="horario-item"><span>Lunes – Viernes</span><span>08:00 – 18:00</span></div>
+            <div class="horario-item"><span>Sábado</span><span>09:00 – 14:00</span></div>
+            <div class="horario-item"><span>Domingo</span><span>Cerrado</span></div>
+
+            <h3 style="margin-top:20px;">📦 Envíos</h3>
+            <p>Envíos a todo el Ecuador. Quito, Guayaquil, Puyo y más ciudades.</p>
+
+            <h3 style="margin-top:20px;">🎨 Personalización</h3>
+            <p>Aplicamos tu logo con las mejores técnicas:</p>
+            <div class="tecnica-tag">🖨️ <strong style="color:#f5c518;">DTF</strong> — Impresión directa en tela</div>
+            <div class="tecnica-tag">🎽 <strong style="color:#f5c518;">Vinil Textil</strong> — Acabado premium</div>
+            <div class="tecnica-tag">🪡 <strong style="color:#f5c518;">Bordado</strong> — Clásico y duradero</div>
+            <p style="font-size:0.8rem; color:#aaa; margin-top:8px;">Sin costo extra en pedidos mayores a 20 prendas.</p>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════
+       COTIZADOR DE PEDIDOS — SECCIÓN DINÁMICA
+  ════════════════════════════════════════════ -->
+  <section id="cotizador">
+    <div class="container">
+      <h2 class="sec-title text-center">Cotizador de Pedidos</h2>
+      <p class="text-center text-muted mt-2 mb-5">Registra tu pedido de uniformes y te contactamos con la cotización personalizada.</p>
+
+      <div class="row g-4">
+
+        <!-- FORMULARIO -->
+        <div class="col-lg-5">
+          <div class="cotizador-form-wrap">
+            <h5 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:22px;">
+              📋 Nuevo Pedido
+            </h5>
+            <form id="formCotizacion" novalidate>
+              <div class="mb-3">
+                <label for="cotNombre" class="form-label">Nombre del Cliente *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cotNombre"
+                  placeholder="Ej: Empresa Constructora XYZ"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cotDescripcion" class="form-label">Descripción del Pedido *</label>
+                <textarea
+                  class="form-control"
+                  id="cotDescripcion"
+                  rows="3"
+                  placeholder="Ej: 50 polos manga corta con logo bordado en color azul y blanco"
+                ></textarea>
+              </div>
+              <div class="mb-4">
+                <label for="cotCategoria" class="form-label">Tipo de Prenda *</label>
+                <select class="form-select" id="cotCategoria">
+                  <option value="">-- Selecciona una categoría --</option>
+                  <option value="Polo Corporativo">Polo Corporativo</option>
+                  <option value="Polo Industrial">Polo Industrial</option>
+                  <option value="Chaleco de Seguridad">Chaleco de Seguridad</option>
+                  <option value="Camisa de Trabajo">Camisa de Trabajo</option>
+                  <option value="Uniforme Completo">Uniforme Completo</option>
+                  <option value="Personalizado">Personalizado</option>
+                </select>
+              </div>
+              <button type="submit" class="btn w-100 fw-bold py-2" style="background:#f5c518; color:#1a1a2e; border-radius:6px; font-size:0.95rem;">
+                ➕ Registrar Pedido
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- LISTA DE PEDIDOS -->
+        <div class="col-lg-7">
+
+          <!-- Contador -->
+          <div class="contador-wrap">
+            <span class="contador-label">📦 Total de pedidos registrados</span>
+            <span class="contador-numero" id="contadorTotal">0</span>
+          </div>
+
+          <!-- Mensaje vacío -->
+          <div id="mensajeVacio" style="display:block;">
+            <div style="font-size:3rem;">📋</div>
+            <p>Aún no hay pedidos registrados.<br/>Completa el formulario para agregar el primero.</p>
+          </div>
+
+          <!-- Tarjetas de pedidos -->
+          <div class="row g-3" id="listaRegistros"></div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="container">
+      <h2 class="sec-title">Contacto</h2>
+      <div class="row g-4 mt-2">
+
+        <!-- INFO CONTACTO -->
+        <div class="col-lg-5">
+          <div class="contacto-info">
+
+            <div class="mb-4">
+              <h4>📧 Correo Electrónico</h4>
+              <a href="mailto:info@alwork.ec">info@alwork.ec</a>
+              <a href="mailto:ventas@alwork.ec">ventas@alwork.ec</a>
+            </div>
+
+            <div class="mb-4">
+              <h4>📞 Teléfono</h4>
+              <a href="tel:+593980099875">0980 099 875</a>
+              <a href="tel:+593939938542">0939 938 542</a>
+            </div>
+
+            <div class="mb-4">
+              <h4>📍 Dirección</h4>
+              <p style="color:#f5c518; font-weight:600; margin-bottom:4px;">📌 Quito – Ecuador</p>
+              <p>Gran Colombia y Paquisha<br/>Quito, Ecuador</p>
+              <div style="margin-top:12px; border-radius:8px; overflow:hidden;">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.802!2d-78.52918!3d-0.22985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a4a62f88a51%3A0x56ad31d05b2ff4f!2sGran%20Colombia%2C%20Quito!5e0!3m2!1ses!2sec!4v1699000000000!5m2!1ses!2sec"
+                  width="100%" height="180" style="border:0; display:block;"
+                  allowfullscreen="" loading="lazy" title="Ubicación AL WORK">
+                </iframe>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <h4>🌐 Redes Sociales</h4>
+              <div class="redes">
+                <a href="https://www.facebook.com" target="_blank" class="red-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                  Facebook
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="red-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                  Instagram
+                </a>
+                <a href="https://wa.me/593980099875" target="_blank" class="red-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a13 13 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="https://www.tiktok.com" target="_blank" class="red-link">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.54V6.79a4.85 4.85 0 01-1.02-.1z"/></svg>
+                  TikTok
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FORMULARIO DE CONTACTO -->
+        <div class="col-lg-7">
+          <h4 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:20px;">✉️ Envíanos un Mensaje</h4>
+          <form class="form-alwork">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre completo</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Tu nombre" required />
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" placeholder="tu@correo.com" required />
+              </div>
+              <div class="col-12">
+                <label for="asunto" class="form-label">Asunto</label>
+                <input type="text" class="form-control" id="asunto" placeholder="¿En qué podemos ayudarte?" required />
+              </div>
+              <div class="col-12">
+                <label for="mensaje" class="form-label">Mensaje</label>
+                <textarea class="form-control" id="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn-send">Enviar Mensaje</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════
+     FOOTER
+═══════════════════════════ -->
+<footer>
+  <p><strong>AL WORK</strong> — Uniformes &amp; Ropa de Trabajo Profesional</p>
+  <p>Estudiantes: <strong>José Alberto Ramírez Guamán - Carlos Santiago Ramírez Guamán</strong> &nbsp;|&nbsp; Asignatura: <strong>Desarrollo de Aplicaciones Web</strong> &nbsp;|&nbsp; Año: <strong>2026</strong></p>
+  <p style="margin-top:6px; font-size:0.78rem;">Universidad Estatal Amazónica &nbsp;·&nbsp; Tecnologías de la Información &nbsp;·&nbsp; Cuarto Semestre</p>
+</footer>
+
+<!-- ── BOOTSTRAP JS CDN ── -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ── JAVASCRIPT EXTERNO ── -->
+<script src="script.js"></script>
+
+</body>
+</html>
