@@ -1,17 +1,24 @@
 /* ================================================================
    AL WORK — script.js
    Cotizador de Pedidos Dinámico
-   Semana 5 — Desarrollo de Aplicaciones Web
+   Semana 6 — Validaciones dinámicas y manejo básico de formularios
    ================================================================ */
 
 // ── REFERENCIAS AL DOM ──────────────────────────────────────────
-const formulario     = document.getElementById('formCotizacion');
-const inputNombre    = document.getElementById('cotNombre');
-const inputDesc      = document.getElementById('cotDescripcion');
+const formulario      = document.getElementById('formCotizacion');
+const inputNombre     = document.getElementById('cotNombre');
+const inputDesc       = document.getElementById('cotDescripcion');
 const selectCategoria = document.getElementById('cotCategoria');
-const listaRegistros = document.getElementById('listaRegistros');
-const contadorTotal  = document.getElementById('contadorTotal');
-const mensajeVacio   = document.getElementById('mensajeVacio');
+const listaRegistros  = document.getElementById('listaRegistros');
+const contadorTotal   = document.getElementById('contadorTotal');
+const mensajeVacio    = document.getElementById('mensajeVacio');
+const alertaCotizacion = document.getElementById('alertaCotizacion');
+
+// ── CONFIGURACIÓN DE VALIDACIÓN (Semana 6) ──────────────────────
+const CONFIG = {
+  nombreMinLength: 3,
+  descMinLength: 10
+};
 
 // ── ARRAY DE PEDIDOS ────────────────────────────────────────────
 let pedidos = [];
@@ -24,18 +31,20 @@ function actualizarContador() {
 
 // ── FUNCIÓN: MOSTRAR / OCULTAR MENSAJE VACÍO ────────────────────
 function actualizarMensajeVacio() {
-  if (pedidos.length === 0) {
-    mensajeVacio.style.display = 'block';
-  } else {
-    mensajeVacio.style.display = 'none';
-  }
+  mensajeVacio.style.display = pedidos.length === 0 ? 'block' : 'none';
 }
+
+/* ================================================================
+   FEEDBACK POR CAMPO (is-invalid / is-valid)
+   ================================================================ */
 
 // ── FUNCIÓN: MOSTRAR ERROR EN CAMPO ─────────────────────────────
 function mostrarError(campo, mensaje) {
+  campo.classList.remove('is-valid');
   campo.classList.add('is-invalid');
-  let feedback = campo.nextElementSibling;
-  if (!feedback || !feedback.classList.contains('invalid-feedback')) {
+
+  let feedback = campo.parentNode.querySelector('.invalid-feedback');
+  if (!feedback) {
     feedback = document.createElement('div');
     feedback.classList.add('invalid-feedback');
     campo.parentNode.appendChild(feedback);
@@ -43,112 +52,190 @@ function mostrarError(campo, mensaje) {
   feedback.textContent = mensaje;
 }
 
-// ── FUNCIÓN: LIMPIAR ERROR EN CAMPO ─────────────────────────────
-function limpiarError(campo) {
+// ── FUNCIÓN: MOSTRAR ÉXITO EN CAMPO ─────────────────────────────
+function mostrarExito(campo, mensaje) {
   campo.classList.remove('is-invalid');
   campo.classList.add('is-valid');
+
+  let feedback = campo.parentNode.querySelector('.valid-feedback');
+  if (!feedback) {
+    feedback = document.createElement('div');
+    feedback.classList.add('valid-feedback');
+    campo.parentNode.appendChild(feedback);
+  }
+  feedback.textContent = mensaje;
 }
 
-// ── FUNCIÓN: LIMPIAR TODOS LOS ESTADOS ──────────────────────────
+// ── FUNCIÓN: LIMPIAR ESTADO VISUAL DE UN CAMPO ──────────────────
+function limpiarEstado(campo) {
+  campo.classList.remove('is-invalid', 'is-valid');
+}
+
+// ── FUNCIÓN: LIMPIAR TODOS LOS CAMPOS DEL FORMULARIO ────────────
 function limpiarValidaciones() {
-  [inputNombre, inputDesc, selectCategoria].forEach(function(campo) {
-    campo.classList.remove('is-invalid', 'is-valid');
-  });
+  [inputNombre, inputDesc, selectCategoria].forEach(limpiarEstado);
 }
 
-// ── FUNCIÓN: VALIDAR FORMULARIO ──────────────────────────────────
-function validarFormulario() {
-  let valido = true;
+/* ================================================================
+   ALERTA GENERAL (alert-success / alert-danger) — Semana 6
+   ================================================================ */
 
-  if (inputNombre.value.trim() === '') {
+function mostrarAlerta(tipo, mensaje) {
+  alertaCotizacion.classList.remove('d-none', 'alert-success', 'alert-danger');
+  alertaCotizacion.classList.add(tipo === 'exito' ? 'alert-success' : 'alert-danger');
+  alertaCotizacion.textContent = mensaje;
+
+  // Oculta la alerta automáticamente después de unos segundos
+  clearTimeout(alertaCotizacion._timeoutId);
+  alertaCotizacion._timeoutId = setTimeout(function () {
+    alertaCotizacion.classList.add('d-none');
+  }, 4000);
+}
+
+/* ================================================================
+   VALIDACIONES INDIVIDUALES POR CAMPO (Semana 6)
+   Cada función valida SOLO su campo y devuelve true/false.
+   Se reutilizan tanto en 'blur'/'input' como en el 'submit'.
+   ================================================================ */
+
+// ── VALIDAR NOMBRE / TÍTULO DEL CLIENTE ─────────────────────────
+function validarNombre() {
+  const valor = inputNombre.value.trim();
+
+  if (valor === '') {
     mostrarError(inputNombre, 'El nombre del cliente es obligatorio.');
-    valido = false;
-  } else {
-    limpiarError(inputNombre);
+    return false;
+  }
+  if (valor.length < CONFIG.nombreMinLength) {
+    mostrarError(inputNombre, 'Debe tener al menos ' + CONFIG.nombreMinLength + ' caracteres.');
+    return false;
   }
 
-  if (inputDesc.value.trim() === '') {
+  mostrarExito(inputNombre, 'Nombre válido.');
+  return true;
+}
+
+// ── VALIDAR DESCRIPCIÓN DEL PEDIDO ──────────────────────────────
+function validarDescripcion() {
+  const valor = inputDesc.value.trim();
+
+  if (valor === '') {
     mostrarError(inputDesc, 'La descripción del pedido es obligatoria.');
-    valido = false;
-  } else {
-    limpiarError(inputDesc);
+    return false;
+  }
+  if (valor.length < CONFIG.descMinLength) {
+    mostrarError(inputDesc, 'Agrega más detalle (mínimo ' + CONFIG.descMinLength + ' caracteres).');
+    return false;
   }
 
+  mostrarExito(inputDesc, 'Descripción válida.');
+  return true;
+}
+
+// ── VALIDAR CATEGORÍA / TIPO DE PRENDA ──────────────────────────
+function validarCategoria() {
   if (selectCategoria.value === '') {
     mostrarError(selectCategoria, 'Selecciona un tipo de prenda.');
-    valido = false;
-  } else {
-    limpiarError(selectCategoria);
+    return false;
   }
 
-  return valido;
+  mostrarExito(selectCategoria, 'Categoría seleccionada.');
+  return true;
 }
+
+// ── FUNCIÓN: VALIDAR FORMULARIO COMPLETO ────────────────────────
+function validarFormulario() {
+  // Se ejecutan las tres para que TODOS los campos muestren su
+  // estado (no solo el primero que falle).
+  const nombreOk    = validarNombre();
+  const descOk      = validarDescripcion();
+  const categoriaOk = validarCategoria();
+
+  return nombreOk && descOk && categoriaOk;
+}
+
+/* ================================================================
+   VALIDACIÓN EN TIEMPO REAL — eventos input / blur (Semana 6)
+   ================================================================ */
+
+// input: mientras el usuario escribe, si ya es válido lo confirmamos
+inputNombre.addEventListener('input', function () {
+  if (inputNombre.classList.contains('is-invalid')) validarNombre();
+});
+// blur: al salir del campo, se valida siempre
+inputNombre.addEventListener('blur', validarNombre);
+
+inputDesc.addEventListener('input', function () {
+  if (inputDesc.classList.contains('is-invalid')) validarDescripcion();
+});
+inputDesc.addEventListener('blur', validarDescripcion);
+
+selectCategoria.addEventListener('change', validarCategoria);
+selectCategoria.addEventListener('blur', validarCategoria);
+
+/* ================================================================
+   TARJETAS DE PEDIDO (createElement + appendChild)
+   ================================================================ */
 
 // ── FUNCIÓN: OBTENER BADGE DE COLOR SEGÚN CATEGORÍA ─────────────
 function getBadgeCategoria(categoria) {
   const colores = {
-    'Polo Corporativo':    'bg-primary',
-    'Polo Industrial':     'bg-warning text-dark',
-    'Chaleco de Seguridad':'bg-danger',
-    'Camisa de Trabajo':   'bg-success',
-    'Uniforme Completo':   'bg-dark',
-    'Personalizado':       'bg-secondary'
+    'Polo Corporativo':     'bg-primary',
+    'Polo Industrial':      'bg-warning text-dark',
+    'Chaleco de Seguridad': 'bg-danger',
+    'Camisa de Trabajo':    'bg-success',
+    'Uniforme Completo':    'bg-dark',
+    'Personalizado':        'bg-secondary'
   };
   return colores[categoria] || 'bg-secondary';
 }
 
-// ── FUNCIÓN: CREAR TARJETA DE PEDIDO (createElement + appendChild)
+// ── FUNCIÓN: CREAR TARJETA DE PEDIDO ────────────────────────────
 function crearTarjetaPedido(pedido) {
-  // Contenedor columna
   const col = document.createElement('div');
   col.classList.add('col-md-6', 'col-lg-4');
   col.setAttribute('id', 'pedido-' + pedido.id);
 
-  // Card
   const card = document.createElement('div');
   card.classList.add('card', 'pedido-card', 'h-100', 'shadow-sm');
 
-  // Card body
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
 
-  // Badge categoría
   const badge = document.createElement('span');
-  badge.classList.add('badge', getBadgeCategoria(pedido.categoria), 'mb-2');
+  badge.classList.add('badge', 'mb-2');
+  // getBadgeCategoria puede devolver una o varias clases separadas por espacio
+  // (ej: "bg-warning text-dark"), por eso se dividen antes de agregarlas.
+  getBadgeCategoria(pedido.categoria).split(' ').forEach(function (clase) {
+    if (clase) badge.classList.add(clase);
+  });
   badge.textContent = pedido.categoria;
 
-  // Número de pedido
   const numeroPedido = document.createElement('small');
   numeroPedido.classList.add('text-muted', 'd-block', 'mb-1');
   numeroPedido.textContent = '# Pedido ' + String(pedido.id).padStart(3, '0');
 
-  // Título (nombre cliente)
   const titulo = document.createElement('h5');
   titulo.classList.add('card-title', 'pedido-nombre');
   titulo.textContent = pedido.nombre;
 
-  // Descripción
   const descripcion = document.createElement('p');
   descripcion.classList.add('card-text', 'pedido-desc');
   descripcion.textContent = pedido.descripcion;
 
-  // Fecha
   const fecha = document.createElement('small');
   fecha.classList.add('text-muted');
   fecha.textContent = '📅 ' + pedido.fecha;
 
-  // Botón eliminar
   const btnEliminar = document.createElement('button');
   btnEliminar.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'mt-3', 'w-100', 'btn-eliminar');
   btnEliminar.textContent = '🗑 Eliminar Pedido';
   btnEliminar.setAttribute('data-id', pedido.id);
 
-  // addEventListener para eliminar
-  btnEliminar.addEventListener('click', function() {
+  btnEliminar.addEventListener('click', function () {
     eliminarPedido(pedido.id);
   });
 
-  // Armar estructura con appendChild
   cardBody.appendChild(numeroPedido);
   cardBody.appendChild(badge);
   cardBody.appendChild(titulo);
@@ -188,16 +275,14 @@ function agregarPedido(nombre, descripcion, categoria) {
 
 // ── FUNCIÓN: ELIMINAR PEDIDO ─────────────────────────────────────
 function eliminarPedido(id) {
-  // Remover del array
-  pedidos = pedidos.filter(function(p) { return p.id !== id; });
+  pedidos = pedidos.filter(function (p) { return p.id !== id; });
 
-  // Remover del DOM con animación
   const elemento = document.getElementById('pedido-' + id);
   if (elemento) {
     elemento.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     elemento.style.opacity = '0';
     elemento.style.transform = 'scale(0.9)';
-    setTimeout(function() {
+    setTimeout(function () {
       elemento.remove();
       actualizarContador();
       actualizarMensajeVacio();
@@ -205,11 +290,17 @@ function eliminarPedido(id) {
   }
 }
 
-// ── EVENTO SUBMIT DEL FORMULARIO ─────────────────────────────────
-formulario.addEventListener('submit', function(e) {
+/* ================================================================
+   EVENTO SUBMIT DEL FORMULARIO
+   ================================================================ */
+
+formulario.addEventListener('submit', function (e) {
   e.preventDefault(); // Evita que la página se recargue
 
-  if (!validarFormulario()) return;
+  if (!validarFormulario()) {
+    mostrarAlerta('error', '⚠ Revisa los campos marcados en rojo antes de continuar.');
+    return;
+  }
 
   agregarPedido(
     inputNombre.value,
@@ -217,40 +308,30 @@ formulario.addEventListener('submit', function(e) {
     selectCategoria.value
   );
 
-  // Limpiar formulario
+  mostrarAlerta('exito', '✔ Pedido registrado correctamente.');
+
   formulario.reset();
   limpiarValidaciones();
 
-  // Scroll suave hacia los registros
   listaRegistros.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-// ── LIMPIAR VALIDACIONES AL ESCRIBIR ────────────────────────────
-inputNombre.addEventListener('input', function() {
-  if (inputNombre.value.trim() !== '') limpiarError(inputNombre);
-});
+/* ================================================================
+   NAVBAR: MARCAR ENLACE ACTIVO AL HACER SCROLL
+   ================================================================ */
 
-inputDesc.addEventListener('input', function() {
-  if (inputDesc.value.trim() !== '') limpiarError(inputDesc);
-});
-
-selectCategoria.addEventListener('change', function() {
-  if (selectCategoria.value !== '') limpiarError(selectCategoria);
-});
-
-// ── NAVBAR: MARCAR ENLACE ACTIVO AL HACER SCROLL ────────────────
 const secciones = document.querySelectorAll('section[id]');
 const navLinks  = document.querySelectorAll('.navbar-alwork .nav-link');
 
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
   let actual = '';
-  secciones.forEach(function(sec) {
+  secciones.forEach(function (sec) {
     const top = sec.offsetTop - 100;
     if (window.scrollY >= top) {
       actual = sec.getAttribute('id');
     }
   });
-  navLinks.forEach(function(link) {
+  navLinks.forEach(function (link) {
     link.classList.remove('active');
     if (link.getAttribute('href') === '#' + actual) {
       link.classList.add('active');

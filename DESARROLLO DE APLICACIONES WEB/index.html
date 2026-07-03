@@ -252,6 +252,10 @@
     .cotizador-form-wrap .form-control.is-valid,
     .cotizador-form-wrap .form-select.is-valid { border-color: #198754; }
 
+    /* Feedback texts sobre fondo oscuro del cotizador */
+    .cotizador-form-wrap .invalid-feedback { color: #ff8a8a; }
+    .cotizador-form-wrap .valid-feedback { color: #7be6a4; display: block; }
+
     /* Contador */
     .contador-wrap {
       background: var(--color-dark);
@@ -612,6 +616,10 @@
             <h5 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:22px;">
               📋 Nuevo Pedido
             </h5>
+
+            <!-- Contenedor de alerta general (éxito / error) — Semana 6 -->
+            <div id="alertaCotizacion" class="alert d-none" role="alert"></div>
+
             <form id="formCotizacion" novalidate>
               <div class="mb-3">
                 <label for="cotNombre" class="form-label">Nombre del Cliente *</label>
@@ -775,7 +783,7 @@
 ═══════════════════════════ -->
 <footer>
   <p><strong>AL WORK</strong> — Uniformes &amp; Ropa de Trabajo.</p>
-  <p>Estudiantes: <strong>José Alberto Ramírez Guamán - Carlos Santiago Ramírez Guamán</strong> &nbsp;|&nbsp; Asignatura: <strong>Desarrollo de Aplicaciones Web</strong> &nbsp;|&nbsp; Año: <strong>2026</strong></p>
+  <p>Estudiantes: <strong>José Alberto Ramírez Guamán "C" – Carlos Santiago Ramírez Guamán "D"</strong> &nbsp;|&nbsp; Asignatura: <strong>Desarrollo de Aplicaciones Web</strong> &nbsp;|&nbsp; Año: <strong>2026</strong></p>
   <p style="margin-top:6px; font-size:0.78rem;">Universidad Estatal Amazónica &nbsp;·&nbsp; Tecnologías de la Información &nbsp;·&nbsp; Cuarto Semestre</p>
 </footer>
 
