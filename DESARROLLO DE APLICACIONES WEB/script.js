@@ -77,6 +77,25 @@ function limpiarValidaciones() {
 }
 
 /* ================================================================
+   SONIDO DE ÉXITO — se reproduce al registrar un pedido (Semana 6)
+   Usa el archivo de audio propio de AL WORK.
+   ================================================================ */
+
+const sonidoExito = new Audio('img/audiologoALWORK.mp3');
+
+function reproducirSonidoExito() {
+  try {
+    sonidoExito.currentTime = 0; // permite reproducirlo varias veces seguidas
+    sonidoExito.play().catch(function (error) {
+      // Si el navegador bloquea el autoplay de audio, no rompe el resto del código
+      console.warn('No se pudo reproducir el sonido de éxito:', error);
+    });
+  } catch (error) {
+    console.warn('No se pudo reproducir el sonido de éxito:', error);
+  }
+}
+
+/* ================================================================
    ALERTA GENERAL (alert-success / alert-danger) — Semana 6
    ================================================================ */
 
@@ -309,6 +328,7 @@ formulario.addEventListener('submit', function (e) {
   );
 
   mostrarAlerta('exito', '✔ Pedido registrado correctamente.');
+  reproducirSonidoExito();
 
   formulario.reset();
   limpiarValidaciones();
