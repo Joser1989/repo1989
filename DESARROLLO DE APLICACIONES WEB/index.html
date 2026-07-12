@@ -369,8 +369,16 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════════════════════
+     🧩 PLANTILLA BASE (futuro base.html)
+     Todo lo que está entre este comentario y el de MAIN
+     (header + nav) se cargará UNA sola vez y será igual en
+     todas las páginas del sitio cuando se migre a Flask.
+     En Jinja2 esto sería el contenido antes de {% block content %}
+═══════════════════════════════════════════════════════════ -->
+
 <!-- ═══════════════════════════
-     HEADER
+     HEADER (futura plantilla: templates/partials/header.html)
 ═══════════════════════════ -->
 <header>
   <div class="header-brand">
@@ -383,7 +391,7 @@
 </header>
 
 <!-- ═══════════════════════════
-     NAVBAR BOOTSTRAP
+     NAVBAR (futura plantilla: templates/partials/nav.html)
 ═══════════════════════════ -->
 <nav class="navbar navbar-expand-lg navbar-alwork">
   <div class="container">
@@ -392,394 +400,31 @@
     </button>
     <div class="collapse navbar-collapse" id="menuPrincipal">
       <ul class="navbar-nav mx-auto gap-1">
-        <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="#quienes">Quiénes Somos</a></li>
-        <li class="nav-item"><a class="nav-link" href="#productos">Productos</a></li>
-        <li class="nav-item"><a class="nav-link" href="#cotizador">Cotizador</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" data-seccion="inicio">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" data-seccion="quienes">Quiénes Somos</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" data-seccion="productos">Productos</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" data-seccion="cotizador">Cotizador</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" data-seccion="contacto">Contacto</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- ═══════════════════════════
-     MAIN
-═══════════════════════════ -->
-<main>
-
-  <!-- INICIO / HERO -->
-  <section id="inicio">
-    <div class="container">
-      <h2>Viste con Identidad,<br/>Trabaja con Estilo</h2>
-      <p>En AL WORK diseñamos y comercializamos ropa de trabajo y uniformes corporativos de alta calidad para empresas, equipos y profesionales del Ecuador.</p>
-      <a href="#productos" class="btn-hero">Ver Productos</a>
-      &nbsp;
-      <a href="#contacto" class="btn btn-outline-light ms-2 px-4 py-3 fw-bold">Contáctanos</a>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- QUIÉNES SOMOS -->
-  <section id="quienes">
-    <div class="container">
-      <div class="row align-items-center g-4">
-        <div class="col-lg-7">
-          <h2 class="sec-title">Quiénes Somos</h2>
-          <p><strong>AL WORK</strong> es una empresa ecuatoriana dedicada a la fabricación y comercialización de ropa de trabajo, uniformes corporativos y prendas personalizadas para empresas, instituciones y equipos deportivos. Nació con la misión de ofrecer prendas que combinen funcionalidad, durabilidad y diseño profesional, adaptadas a las necesidades reales del trabajador moderno.</p>
-          <p>Contamos con una amplia línea de productos que incluye; camisas de trabajo, mandiles, overoles, polos corporativos, polos racing, chalecos. Cada prenda es elaborada con materiales de primera calidad, garantizando comodidad durante largas jornadas laborales. Trabajamos con empresas de distintos sectores: automotriz, logística, servicios y más.</p>
-          <p>En AL WORK creemos que vestir bien en el trabajo no es un lujo, es una necesidad. Por eso ofrecemos personalización con <strong>DTF</strong>, <strong>Vinil Textil</strong> y <strong>Bordados</strong> para que tu team luzca unico y con identidad.</p>
-          <div class="d-flex gap-3 mt-4 flex-wrap">
-            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
-              <div style="font-size:1.8rem; font-weight:700;">8+</div>
-              <div style="font-size:0.78rem; color:#ccc;">Años de experiencia</div>
-            </div>
-            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
-              <div style="font-size:1.8rem; font-weight:700;">500+</div>
-              <div style="font-size:0.78rem; color:#ccc;">Clientes satisfechos</div>
-            </div>
-            <div class="text-center p-3 rounded" style="background:#1a1a2e; color:#f5c518; min-width:100px;">
-              <div style="font-size:1.8rem; font-weight:700;">3</div>
-              <div style="font-size:0.78rem; color:#ccc;">Técnicas de personalización</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <img src="img/polo5.jpg" alt="Polo rojo y negro AL WORK" class="img-fluid" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- PRODUCTOS -->
-  <section id="productos">
-    <div class="container">
-      <h2 class="sec-title text-center">Nuestros Productos</h2>
-      <p class="text-center text-muted mt-3 mb-4">Todos nuestros modelos están disponibles en tallas S a XXL con personalización incluida.</p>
-      <div class="row g-4">
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo1.png" class="card-img-top" alt="Polo Manga Larga" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Manga Larga</h5>
-              <p class="card-text">Ideal para equipos industriales y de logística. Tela dry-fit resistente.</p>
-              <p class="precio-tag">$14.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo2.jpg" class="card-img-top" alt="Polo Técnico Manga Corta" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Técnico Manga Corta</h5>
-              <p class="card-text">Corte ergonómico, alta transpirabilidad, perfecto para trabajo en campo.</p>
-              <p class="precio-tag">$16.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo3.jpg" class="card-img-top" alt="Polo Abasto 589" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Abasto 589</h5>
-              <p class="card-text">Diseño moderno con franjas decorativas y bordado de logo incluido.</p>
-              <p class="precio-tag">$16.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo4.jpg" class="card-img-top" alt="Polo Tricolor Corporativo" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Tricolor Racing</h5>
-              <p class="card-text">Tres bloques de color, ideal para uniformes Team Abasto.</p>
-              <p class="precio-tag">$17.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo5.jpg" class="card-img-top" alt="Polo Bicolor Trabajo Pesado" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Bicolor hard work</h5>
-              <p class="card-text">Refuerzos en hombros, tejido anti-desgarro para entornos exigentes.</p>
-              <p class="precio-tag">$19.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo6.png" class="card-img-top" alt="Polo Sport Blanco" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Sport Blanco</h5>
-              <p class="card-text">Elegante y funcional, apto para oficina y eventos corporativos.</p>
-              <p class="precio-tag">$16.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo7.jpg" class="card-img-top" alt="Polo Premium Tricolor" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Premium Tricolor</h5>
-              <p class="card-text">Diseño exclusivo azul, gris y negro. Tela piqué de alta gama con bordado o DTF.</p>
-              <p class="precio-tag">$18.00</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="card prod-card-aw">
-            <img src="img/polo8.jpg" class="card-img-top" alt="Polo Corporativo Azul Royal" />
-            <div class="card-body">
-              <h5 class="card-title">Polo Corporativo Azul Royale</h5>
-              <p class="card-text">Color azul intenso con paneles blancos. Ideal para uniformes de team.</p>
-              <p class="precio-tag">$17.00</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- VIDEO + ASIDE -->
-  <div class="video-aside-wrap">
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-lg-8">
-          <article class="video-section">
-            <h2 class="video-sec-title">Nuestro Trabajo</h2>
-            <p class="text-muted mt-3 mb-3">Conoce más sobre uniformes corporativos y ropa de trabajo personalizada. La imagen de tu empresa comienza con la vestimenta de tu equipo.</p>
-            <div class="video-wrap">
-              <iframe
-                src="https://www.youtube.com/embed/0pOHgbcVbY4"
-                title="Ropa de trabajo y uniformes corporativos"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-              </iframe>
-            </div>
-          </article>
-        </div>
-        <div class="col-lg-4">
-          <aside class="aside-alwork">
-            <h3>⭐ Promociones ⭐</h3>
-            <span class="promo-badge">¡OFERTA DEL MES!</span>
-            <p>Pedidos de <strong style="color:#f5c518;">10 o más prendas</strong> obtienen un <strong style="color:#f5c518;">15% de descuento.</strong> </p>
-
-            <h3 style="margin-top:20px;">🕐 Horarios</h3>
-            <div class="horario-item"><span>Lunes – Viernes</span><span>08:00 – 17:00</span></div>
-            <div class="horario-item"><span>Sábado</span><span>09:00 – 14:00</span></div>
-            <div class="horario-item"><span>Domingo</span><span>Cerrado</span></div>
-
-            <h3 style="margin-top:20px;">📦 Envíos</h3>
-            <p>Envíos a todo el Ecuador. Cuenca, Guayaquil, Puyo y más ciudades.</p>
-
-            <h3 style="margin-top:20px;">🎨 Personalización</h3>
-            <p>Aplicamos tu logo con las mejores técnicas:</p>
-            <div class="tecnica-tag">🖨️ <strong style="color:#f5c518;">DTF</strong> — Impresión directa en tela</div>
-            <div class="tecnica-tag">🎽 <strong style="color:#f5c518;">Vinil Textil</strong> — Acabado premium</div>
-            <div class="tecnica-tag">🪡 <strong style="color:#f5c518;">Bordado</strong> — Clásico y duradero</div>
-            <p style="font-size:0.8rem; color:#aaa; margin-top:8px;">Sin costo extra en pedidos mayores a 20 prendas.</p>
-          </aside>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-divider"></div>
-
-  <!-- ═══════════════════════════════════════════
-       COTIZADOR DE PEDIDOS — SECCIÓN DINÁMICA
-  ════════════════════════════════════════════ -->
-  <section id="cotizador">
-    <div class="container">
-      <h2 class="sec-title text-center">Cotizador de Pedidos</h2>
-      <p class="text-center text-muted mt-2 mb-5">Registra tu pedido de uniformes y te contactamos con la cotización personalizada.</p>
-
-      <div class="row g-4">
-
-        <!-- FORMULARIO -->
-        <div class="col-lg-5">
-          <div class="cotizador-form-wrap">
-            <h5 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:22px;">
-              📋 Nuevo Pedido
-            </h5>
-
-            <!-- Contenedor de alerta general (éxito / error) — Semana 6 -->
-            <div id="alertaCotizacion" class="alert d-none" role="alert"></div>
-
-            <form id="formCotizacion" novalidate>
-              <div class="mb-3">
-                <label for="cotNombre" class="form-label">Nombre del Cliente *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="cotNombre"
-                  placeholder="Ej: Empresa Constructora XYZ"
-                  autocomplete="off"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="cotDescripcion" class="form-label">Descripción del Pedido *</label>
-                <textarea
-                  class="form-control"
-                  id="cotDescripcion"
-                  rows="3"
-                  placeholder="Ej: 50 polos manga corta con logo en DTF en color azul y blanco"
-                ></textarea>
-              </div>
-              <div class="mb-4">
-                <label for="cotCategoria" class="form-label">Tipo de Prenda *</label>
-                <select class="form-select" id="cotCategoria">
-                  <option value="">-- Selecciona una categoría --</option>
-                  <option value="Polo Corporativo">Polo Corporativo</option>
-                  <option value="Polo Industrial">Polo Racing</option>
-                  <option value="Chaleco de Seguridad">Mandiles</option>
-                  <option value="Camisa de Trabajo">Camisa Racing</option>
-                  <option value="Uniforme Completo">Overoles</option>
-                  <option value="Personalizado">Camiseta Jersey</option>
-                </select>
-              </div>
-              <button type="submit" class="btn w-100 fw-bold py-2" style="background:#f5c518; color:#1a1a2e; border-radius:6px; font-size:0.95rem;">
-                 Registrar Pedido
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <!-- LISTA DE PEDIDOS -->
-        <div class="col-lg-7">
-
-          <!-- Contador -->
-          <div class="contador-wrap">
-            <span class="contador-label">📦 Total de pedidos registrados</span>
-            <span class="contador-numero" id="contadorTotal">0</span>
-          </div>
-
-          <!-- Mensaje vacío -->
-          <div id="mensajeVacio" style="display:block;">
-            <div style="font-size:3rem;">📋</div>
-            <p>Aún no hay pedidos registrados.<br/>Completa el formulario para agregar el primero.</p>
-          </div>
-
-          <!-- Tarjetas de pedidos -->
-          <div class="row g-3" id="listaRegistros"></div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- CONTACTO -->
-  <section id="contacto">
-    <div class="container">
-      <h2 class="sec-title">Contacto</h2>
-      <div class="row g-4 mt-2">
-
-        <!-- INFO CONTACTO -->
-        <div class="col-lg-5">
-          <div class="contacto-info">
-
-            <div class="mb-4">
-              <h4>📧 Correo Electrónico</h4>
-              <a href="mailto:info@alwork.ec">info@alwork.ec</a>
-              <a href="mailto:ventas@alwork.ec">ventas@alwork.ec</a>
-            </div>
-
-            <div class="mb-4">
-              <h4>📞 Teléfono</h4>
-              <a href="tel:+593980099875">0980 099 875</a>
-              <a href="tel:+593939938542">0939 938 542</a>
-            </div>
-
-            <div class="mb-4">
-              <h4>📍 Dirección</h4>
-              <p style="color:#f5c518; font-weight:600; margin-bottom:4px;">📌 Llano Chico – Quito – Ecuador</p>
-              <p>Gran Colombia y Paquisha<br/>Quito, Ecuador</p>
-              <div style="margin-top:12px; border-radius:8px; overflow:hidden;">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.802!2d-78.52918!3d-0.22985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a4a62f88a51%3A0x56ad31d05b2ff4f!2sGran%20Colombia%2C%20Quito!5e0!3m2!1ses!2sec!4v1699000000000!5m2!1ses!2sec"
-                  width="100%" height="180" style="border:0; display:block;"
-                  allowfullscreen="" loading="lazy" title="Ubicación AL WORK">
-                </iframe>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <h4>  Redes Sociales</h4>
-              <div class="redes">
-                <a href="https://www.facebook.com" target="_blank" class="red-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
-                  Facebook
-                </a>
-                <a href="https://www.instagram.com" target="_blank" class="red-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                  Instagram
-                </a>
-                <a href="https://wa.me/593980099875" target="_blank" class="red-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a13 13 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  WhatsApp
-                </a>
-                <a href="https://www.tiktok.com" target="_blank" class="red-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.54V6.79a4.85 4.85 0 01-1.02-.1z"/></svg>
-                  TikTok
-                </a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- FORMULARIO DE CONTACTO -->
-        <div class="col-lg-7">
-          <h4 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:20px;">✉️ Envíanos un Mensaje</h4>
-          <form class="form-alwork">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="nombre" class="form-label">Nombre completo</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Tu nombre" required />
-              </div>
-              <div class="col-md-6">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="email" placeholder="tu@correo.com" required />
-              </div>
-              <div class="col-12">
-                <label for="asunto" class="form-label">Asunto</label>
-                <input type="text" class="form-control" id="asunto" placeholder="¿En qué podemos ayudarte?" required />
-              </div>
-              <div class="col-12">
-                <label for="mensaje" class="form-label">Mensaje</label>
-                <textarea class="form-control" id="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
-              </div>
-              <div class="col-12">
-                <button type="submit" class="btn-send">Enviar Mensaje</button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
+<!-- ══════════════════════════════════════════════════════════
+     🧩 CONTENIDO DINÁMICO (futuro {% block content %} de Flask)
+     Este <main> queda VACÍO a propósito. script.js usa fetch()
+     para traer SOLO el fragmento .html de la carpeta templates/
+     correspondiente a la sección que el usuario pide, y lo
+     inyecta aquí. Header, nav y footer NO se vuelven a cargar.
+═══════════════════════════════════════════════════════════ -->
+<main id="contenido">
+  <!-- El contenido se inyecta aquí dinámicamente por fetch() -->
 </main>
+<!-- 🧩 FIN DEL BLOQUE DE CONTENIDO DINÁMICO ({% endblock %}) -->
 
 <!-- ═══════════════════════════
-     FOOTER
+     FOOTER (futura plantilla: templates/partials/footer.html)
+     Vuelve a ser parte fija de base.html — igual en todas las páginas.
 ═══════════════════════════ -->
 <footer>
   <p><strong>AL WORK</strong> — Uniformes &amp; Ropa de Trabajo.</p>

@@ -1,0 +1,86 @@
+<!-- ══════════════════════════════════════════════════════════
+     🧩 TEMPLATE: cotizador.html
+     Formulario + lista dinámica de pedidos (Semana 6 + 7).
+     Al insertarse este fragmento, script.js vuelve a "conectar"
+     los eventos del formulario con inicializarCotizador(),
+     porque estos elementos no existen hasta que este archivo
+     se carga en el DOM.
+═══════════════════════════════════════════════════════════ -->
+<section id="cotizador">
+  <div class="container">
+    <h2 class="sec-title text-center">Cotizador de Pedidos</h2>
+    <p class="text-center text-muted mt-2 mb-5">Registra tu pedido de uniformes y te contactamos con la cotización personalizada.</p>
+
+    <div class="row g-4">
+
+      <!-- FORMULARIO -->
+      <div class="col-lg-5">
+        <div class="cotizador-form-wrap">
+          <h5 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:22px;">
+            📋 Nuevo Pedido
+          </h5>
+
+          <!-- Contenedor de alerta general (éxito / error) — Semana 6 -->
+          <div id="alertaCotizacion" class="alert d-none" role="alert"></div>
+
+          <form id="formCotizacion" novalidate>
+            <div class="mb-3">
+              <label for="cotNombre" class="form-label">Nombre del Cliente *</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cotNombre"
+                placeholder="Ej: Empresa Constructora XYZ"
+                autocomplete="off"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cotDescripcion" class="form-label">Descripción del Pedido *</label>
+              <textarea
+                class="form-control"
+                id="cotDescripcion"
+                rows="3"
+                placeholder="Ej: 50 polos manga corta con logo en DTF en color azul y blanco"
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="cotCategoria" class="form-label">Tipo de Prenda *</label>
+              <select class="form-select" id="cotCategoria">
+                <option value="">-- Selecciona una categoría --</option>
+                <option value="Polo Corporativo">Polo Corporativo</option>
+                <option value="Polo Industrial">Polo Racing</option>
+                <option value="Chaleco de Seguridad">Mandiles</option>
+                <option value="Camisa de Trabajo">Camisa Racing</option>
+                <option value="Uniforme Completo">Overoles</option>
+                <option value="Personalizado">Camiseta Jersey</option>
+              </select>
+            </div>
+            <button type="submit" class="btn w-100 fw-bold py-2" style="background:#f5c518; color:#1a1a2e; border-radius:6px; font-size:0.95rem;">
+               Registrar Pedido
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- LISTA DE PEDIDOS -->
+      <div class="col-lg-7">
+
+        <!-- Contador -->
+        <div class="contador-wrap">
+          <span class="contador-label">📦 Total de pedidos registrados</span>
+          <span class="contador-numero" id="contadorTotal">0</span>
+        </div>
+
+        <!-- Mensaje vacío -->
+        <div id="mensajeVacio" style="display:block;">
+          <div style="font-size:3rem;">📋</div>
+          <p>Aún no hay pedidos registrados.<br/>Completa el formulario para agregar el primero.</p>
+        </div>
+
+        <!-- Tarjetas de pedidos -->
+        <div class="row g-3" id="listaRegistros"></div>
+
+      </div>
+    </div>
+  </div>
+</section>

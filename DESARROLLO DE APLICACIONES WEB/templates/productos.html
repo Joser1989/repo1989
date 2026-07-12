@@ -1,0 +1,21 @@
+<!-- ══════════════════════════════════════════════════════════
+     🧩 TEMPLATE: productos.html
+     El HTML aquí es solo el "cascarón". Las tarjetas de cada
+     producto NO están escritas a mano: las genera script.js
+     a partir del array `productos`, apenas este fragmento
+     termina de insertarse en el DOM (ver inicializarProductos()).
+═══════════════════════════════════════════════════════════ -->
+<section id="productos">
+  <div class="container">
+    <h2 class="sec-title text-center">Nuestros Productos</h2>
+    <p class="text-center text-muted mt-3 mb-4">Todos nuestros modelos están disponibles en tallas S a XXL con personalización incluida.</p>
+
+    <!-- Mensaje condicional: se muestra solo si no hay productos cargados -->
+    <p id="mensajeSinProductos" class="text-center text-muted" style="display:none;">
+      😕 No hay productos disponibles por el momento.
+    </p>
+
+    <!-- Contenedor dinámico: aquí el JS inyecta las tarjetas -->
+    <div class="row g-4" id="listaProductos"></div>
+  </div>
+</section>
