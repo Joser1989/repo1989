@@ -350,6 +350,69 @@
     /* ── DIVIDER ── */
     .section-divider { height: 4px; background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-dark) 100%); }
 
+    /* ── BOTÓN FLOTANTE WHATSAPP ── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 90px;
+      right: 28px;
+      width: 60px;
+      height: 60px;
+      background: transparent;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+      z-index: 2000;
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.08);
+      box-shadow: none;
+    }
+    .whatsapp-float svg { width: 32px; height: 32px; fill: #fff; }
+    .whatsapp-float img { width: 56px; height: 56px; object-fit: contain; }
+    .whatsapp-float .whatsapp-tooltip {
+      position: absolute;
+      right: 70px;
+      background: var(--color-dark);
+      color: var(--color-gold);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .whatsapp-float:hover .whatsapp-tooltip { opacity: 1; }
+    @media (max-width: 480px) {
+      .whatsapp-float { width: 52px; height: 52px; bottom: 16px; right: 16px; }
+      .whatsapp-float svg { width: 28px; height: 28px; }
+      .whatsapp-float img { width: 28px; height: 28px; }
+      .whatsapp-float .whatsapp-tooltip { display: none; }
+    }
+
+    /* ── MODAL DETALLE PEDIDO ── */
+    #modalDetallePedido .modal-content {
+      background: var(--color-dark);
+      color: #fff;
+      border: 1px solid #2a3a5e;
+      border-radius: 10px;
+    }
+    #modalDetallePedido .modal-header,
+    #modalDetallePedido .modal-footer {
+      border-color: #2a3a5e;
+    }
+    #modalDetallePedido .modal-title { color: var(--color-gold); }
+    #modalDetallePedido dt { color: var(--color-gold); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+    #modalDetallePedido dd { color: #ddd; margin-bottom: 12px; }
+
+    /* ── SPINNER DE CARGA DE SECCIÓN ── */
+    .loading-wrap { padding: 90px 0; text-align: center; color: #999; }
+
     /* ── MEDIA QUERIES ── */
     @media (max-width: 768px) {
       header h1 { font-size: 1.2rem; }
@@ -391,7 +454,7 @@
 </header>
 
 <!-- ═══════════════════════════
-     NAVBAR (futura plantillla: templates/partials/nav.html)
+     NAVBAR (futura plantilla: templates/partials/nav.html)
 ═══════════════════════════ -->
 <nav class="navbar navbar-expand-lg navbar-alwork">
   <div class="container">
@@ -412,7 +475,7 @@
 
 <!-- ══════════════════════════════════════════════════════════
      🧩 CONTENIDO DINÁMICO (futuro {% block content %} de Flask)
-     Este <main> queda VACÍO a popósito. script.js usa fetch()
+     Este <main> queda VACÍO a propósito. script.js usa fetch()
      para traer SOLO el fragmento .html de la carpeta templates/
      correspondiente a la sección que el usuario pide, y lo
      inyecta aquí. Header, nav y footer NO se vuelven a cargar.
@@ -421,6 +484,42 @@
   <!-- El contenido se inyecta aquí dinámicamente por fetch() -->
 </main>
 <!-- 🧩 FIN DEL BLOQUE DE CONTENIDO DINÁMICO ({% endblock %}) -->
+
+<!-- ═══════════════════════════
+     BOTÓN FLOTANTE DE WHATSAPP
+     Fijo en pantalla (position: fixed), visible en todas las
+     secciones y sin perderse al hacer scroll.
+═══════════════════════════ -->
+<a href="https://wa.me/593980099875?text=Hola%20AL%20WORK%2C%20quisiera%20más%20información"
+   class="whatsapp-float" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <span class="whatsapp-tooltip">0980 099 875</span>
+  <img src="img/whatsapp.png" alt="WhatsApp" />
+</a>
+
+<!-- ═══════════════════════════
+     MODAL BOOTSTRAP — Detalle de Pedido
+     Vive en index.html (nunca se recarga) para poder usarse
+     desde las tarjetas de pedido generadas dinámicamente en
+     templates/cotizador.html. script.js llena su contenido y
+     lo abre con bootstrap.Modal.
+═══════════════════════════ -->
+<div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetallePedidoLabel">📋 Detalle del Pedido</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalDetalleContenido">
+        <!-- Contenido inyectado dinámicamente por script.js -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" id="btnEliminarDesdeModal">🗑 Eliminar Pedido</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════
      FOOTER (futura plantilla: templates/partials/footer.html)
