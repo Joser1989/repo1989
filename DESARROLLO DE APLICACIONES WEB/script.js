@@ -39,16 +39,30 @@ const sonidoExito = new Audio('img/audiologoALWORK.mp3');
 const contenedorPrincipal = document.getElementById('contenido');
 
 function cargarSeccion(nombre) {
+  // 🧩 SPINNER BOOTSTRAP: se muestra de inmediato mientras fetch()
+  // trae el fragmento, simulando un proceso de carga.
+  contenedorPrincipal.innerHTML =
+    '<div class="loading-wrap">' +
+    '  <div class="spinner-border text-warning" style="width:3rem;height:3rem;" role="status">' +
+    '    <span class="visually-hidden">Cargando...</span>' +
+    '  </div>' +
+    '  <p class="mt-3 mb-0">Cargando contenido...</p>' +
+    '</div>';
+
   fetch('templates/' + nombre + '.html')
     .then(function (respuesta) {
       if (!respuesta.ok) throw new Error('No se encontró templates/' + nombre + '.html');
       return respuesta.text();
     })
     .then(function (html) {
-      contenedorPrincipal.innerHTML = html;
-      inicializarSeccion(nombre);
-      marcarLinkActivo(nombre);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Pequeño retardo simulado para que el spinner sea visible
+      // incluso en conexiones rápidas (proceso simulado desde JS).
+      setTimeout(function () {
+        contenedorPrincipal.innerHTML = html;
+        inicializarSeccion(nombre);
+        marcarLinkActivo(nombre);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 350);
     })
     .catch(function (error) {
       contenedorPrincipal.innerHTML = '<p class="text-center text-muted py-5">No se pudo cargar el contenido. Verifica que Live Server esté activo.</p>';
@@ -61,6 +75,45 @@ function cargarSeccion(nombre) {
 function inicializarSeccion(nombre) {
   if (nombre === 'productos') inicializarProductos();
   if (nombre === 'cotizador') inicializarCotizador();
+  if (nombre === 'contacto') inicializarContacto();
+}
+
+/* ================================================================
+   CONTACTO — spinner + alerta Bootstrap simulando el envío
+   (se llama tras cargar templates/contacto.html)
+   ================================================================ */
+function inicializarContacto() {
+  const formulario  = document.getElementById('formContacto');
+  const alertaBox   = document.getElementById('alertaContacto');
+  const boton       = formulario ? formulario.querySelector('button[type="submit"]') : null;
+  const spinnerBtn  = boton ? boton.querySelector('.btn-spinner') : null;
+
+  if (!formulario) return;
+
+  formulario.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (!formulario.checkValidity()) {
+      formulario.classList.add('was-validated');
+      return;
+    }
+
+    // Simula el proceso de envío con un spinner Bootstrap
+    boton.disabled = true;
+    if (spinnerBtn) spinnerBtn.classList.remove('d-none');
+
+    setTimeout(function () {
+      boton.disabled = false;
+      if (spinnerBtn) spinnerBtn.classList.add('d-none');
+
+      alertaBox.classList.remove('d-none', 'alert-danger');
+      alertaBox.classList.add('alert-success');
+      alertaBox.textContent = '✔ Mensaje enviado correctamente. Te contactaremos pronto.';
+
+      formulario.reset();
+      formulario.classList.remove('was-validated');
+    }, 900);
+  });
 }
 
 // Marca visualmente el link activo del nav (antes se hacía con scroll)
@@ -348,24 +401,73 @@ function inicializarCotizador() {
     fecha.classList.add('text-muted');
     fecha.textContent = '📅 ' + pedido.fecha;
 
+    // Fila de botones: Ver Detalle (abre modal) + Eliminar
+    const filaBotones = document.createElement('div');
+    filaBotones.classList.add('d-flex', 'gap-2', 'mt-3');
+
+    const btnDetalle = document.createElement('button');
+    btnDetalle.classList.add('btn', 'btn-primary', 'btn-sm', 'w-50');
+    btnDetalle.textContent = '🔍 Ver Detalle';
+    btnDetalle.setAttribute('data-id', pedido.id);
+    btnDetalle.addEventListener('click', function () {
+      mostrarDetallePedido(pedido.id);
+    });
+
     const btnEliminar = document.createElement('button');
-    btnEliminar.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'mt-3', 'w-100', 'btn-eliminar');
-    btnEliminar.textContent = '🗑 Eliminar Pedido';
+    btnEliminar.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'w-50', 'btn-eliminar');
+    btnEliminar.textContent = '🗑 Eliminar';
     btnEliminar.setAttribute('data-id', pedido.id);
 
     btnEliminar.addEventListener('click', function () {
       eliminarPedido(pedido.id);
     });
 
+    filaBotones.appendChild(btnDetalle);
+    filaBotones.appendChild(btnEliminar);
+
     cardBody.appendChild(numeroPedido);
     cardBody.appendChild(badge);
     cardBody.appendChild(titulo);
     cardBody.appendChild(descripcion);
     cardBody.appendChild(fecha);
-    cardBody.appendChild(btnEliminar);
+    cardBody.appendChild(filaBotones);
     card.appendChild(cardBody);
     col.appendChild(card);
     return col;
+  }
+
+  /* ── MODAL BOOTSTRAP: Detalle del Pedido ──────────────────────
+     El modal en sí vive en index.html (#modalDetallePedido) porque
+     header/nav/footer nunca se recargan. Aquí solo se llena su
+     contenido y se muestra con la API de bootstrap.Modal.        */
+  function mostrarDetallePedido(id) {
+    const pedido = pedidos.find(function (p) { return p.id === id; });
+    if (!pedido) return;
+
+    const modalEl     = document.getElementById('modalDetallePedido');
+    const contenido    = document.getElementById('modalDetalleContenido');
+    const btnEliminarModal = document.getElementById('btnEliminarDesdeModal');
+    if (!modalEl || !contenido) return;
+
+    contenido.innerHTML =
+      '<dl class="mb-0">' +
+      '  <dt># Pedido</dt><dd>' + String(pedido.id).padStart(3, '0') + '</dd>' +
+      '  <dt>Cliente</dt><dd>' + pedido.nombre + '</dd>' +
+      '  <dt>Tipo de Prenda</dt><dd><span class="badge ' + getBadgeCategoria(pedido.categoria) + '">' + pedido.categoria + '</span></dd>' +
+      '  <dt>Descripción</dt><dd>' + pedido.descripcion + '</dd>' +
+      '  <dt>Fecha de Registro</dt><dd>📅 ' + pedido.fecha + '</dd>' +
+      '</dl>';
+
+    if (btnEliminarModal) {
+      btnEliminarModal.onclick = function () {
+        const bsModal = window.bootstrap.Modal.getInstance(modalEl);
+        if (bsModal) bsModal.hide();
+        eliminarPedido(pedido.id);
+      };
+    }
+
+    const bsModal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+    bsModal.show();
   }
 
   function agregarPedido(nombre, descripcion, categoria) {
@@ -407,6 +509,9 @@ function inicializarCotizador() {
     }
   }
 
+  const btnRegistrar = document.getElementById('btnRegistrarPedido');
+  const spinnerRegistrar = document.getElementById('spinnerRegistrar');
+
   formulario.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -415,18 +520,32 @@ function inicializarCotizador() {
       return;
     }
 
-    agregarPedido(inputNombre.value, inputDesc.value, selectCategoria.value);
+    // 🧩 SPINNER BOOTSTRAP: simula el procesamiento del pedido
+    // antes de confirmarlo (podría ser una petición al servidor).
+    const nombreValor      = inputNombre.value;
+    const descripcionValor = inputDesc.value;
+    const categoriaValor   = selectCategoria.value;
 
-    mostrarAlerta('exito', '✔ Pedido registrado correctamente.');
-    reproducirSonidoExito();
+    btnRegistrar.disabled = true;
+    if (spinnerRegistrar) spinnerRegistrar.classList.remove('d-none');
 
-    formulario.reset();
-    limpiarValidaciones();
+    setTimeout(function () {
+      agregarPedido(nombreValor, descripcionValor, categoriaValor);
 
-    // Antes hacía scroll hacia la lista y la alerta quedaba fuera de
-    // vista. Ahora se centra en la alerta para que el usuario SÍ vea
-    // la confirmación de "Pedido registrado correctamente".
-    alertaCotizacion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      mostrarAlerta('exito', '✔ Pedido registrado correctamente.');
+      reproducirSonidoExito();
+
+      formulario.reset();
+      limpiarValidaciones();
+
+      btnRegistrar.disabled = false;
+      if (spinnerRegistrar) spinnerRegistrar.classList.add('d-none');
+
+      // Antes hacía scroll hacia la lista y la alerta quedaba fuera de
+      // vista. Ahora se centra en la alerta para que el usuario SÍ vea
+      // la confirmación de "Pedido registrado correctamente".
+      alertaCotizacion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 700);
   });
 
   // Repinta los pedidos que ya existían en el array `pedidos`

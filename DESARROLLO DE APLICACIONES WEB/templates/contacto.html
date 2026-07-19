@@ -61,7 +61,7 @@
       <!-- FORMULARIO DE CONTACTO -->
       <div class="col-lg-7">
         <h4 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:20px;">✉️ Envíanos un Mensaje</h4>
-        <form class="form-alwork">
+        <form class="form-alwork" id="formContacto" novalidate>
           <div class="row g-3">
             <div class="col-md-6">
               <label for="nombre" class="form-label">Nombre completo</label>
@@ -80,7 +80,13 @@
               <textarea class="form-control" id="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
             </div>
             <div class="col-12">
-              <button type="submit" class="btn-send">Enviar Mensaje</button>
+              <button type="submit" class="btn btn-primary fw-bold px-4 py-2">
+                <span class="btn-spinner spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                Enviar Mensaje
+              </button>
+            </div>
+            <div class="col-12">
+              <div id="alertaContacto" class="alert d-none mb-0" role="alert"></div>
             </div>
           </div>
         </form>
