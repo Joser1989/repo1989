@@ -399,7 +399,7 @@ function inicializarCotizador() {
 
     const fecha = document.createElement('small');
     fecha.classList.add('text-muted');
-    fecha.textContent = '📅 ' + pedido.fecha;
+    fecha.textContent = pedido.fecha;
 
     // Fila de botones: Ver Detalle (abre modal) + Eliminar
     const filaBotones = document.createElement('div');
@@ -407,7 +407,7 @@ function inicializarCotizador() {
 
     const btnDetalle = document.createElement('button');
     btnDetalle.classList.add('btn', 'btn-primary', 'btn-sm', 'w-50');
-    btnDetalle.textContent = '🔍 Ver Detalle';
+    btnDetalle.textContent = 'Ver Detalle';
     btnDetalle.setAttribute('data-id', pedido.id);
     btnDetalle.addEventListener('click', function () {
       mostrarDetallePedido(pedido.id);
@@ -415,7 +415,7 @@ function inicializarCotizador() {
 
     const btnEliminar = document.createElement('button');
     btnEliminar.classList.add('btn', 'btn-outline-danger', 'btn-sm', 'w-50', 'btn-eliminar');
-    btnEliminar.textContent = '🗑 Eliminar';
+    btnEliminar.textContent = 'Eliminar';
     btnEliminar.setAttribute('data-id', pedido.id);
 
     btnEliminar.addEventListener('click', function () {
@@ -455,7 +455,7 @@ function inicializarCotizador() {
       '  <dt>Cliente</dt><dd>' + pedido.nombre + '</dd>' +
       '  <dt>Tipo de Prenda</dt><dd><span class="badge ' + getBadgeCategoria(pedido.categoria) + '">' + pedido.categoria + '</span></dd>' +
       '  <dt>Descripción</dt><dd>' + pedido.descripcion + '</dd>' +
-      '  <dt>Fecha de Registro</dt><dd>📅 ' + pedido.fecha + '</dd>' +
+      '  <dt>Fecha de Registro</dt><dd>  ' + pedido.fecha + '</dd>' +
       '</dl>';
 
     if (btnEliminarModal) {

@@ -17,10 +17,10 @@
       <div class="col-lg-5">
         <div class="cotizador-form-wrap">
           <h5 style="color:#f5c518; text-transform:uppercase; letter-spacing:1.5px; font-size:0.85rem; margin-bottom:22px;">
-            📋 Nuevo Pedido
+              Nuevo Pedido
           </h5>
 
-          <!-- Contenedor de alerta general (éxito / error) — Semana 6 -->
+          <!-- Contenedor de alerta general (éxito / error) — WEEK 6 -->
           <div id="alertaCotizacion" class="alert d-none" role="alert"></div>
 
           <form id="formCotizacion" novalidate>
@@ -30,7 +30,7 @@
                 type="text"
                 class="form-control"
                 id="cotNombre"
-                placeholder="Ej: Empresa Constructora XYZ"
+                placeholder="Ej: Multitrabajos"
                 autocomplete="off"
               />
             </div>
@@ -40,19 +40,19 @@
                 class="form-control"
                 id="cotDescripcion"
                 rows="3"
-                placeholder="Ej: 50 polos manga corta con logo en DTF en color azul y blanco"
+                placeholder="Ej: 20 polos negras con logo en DTF, pecho y espalda."
               ></textarea>
             </div>
             <div class="mb-4">
               <label for="cotCategoria" class="form-label">Tipo de Prenda *</label>
               <select class="form-select" id="cotCategoria">
                 <option value="">-- Selecciona una categoría --</option>
-                <option value="Polo Corporativo">Polo Corporativo</option>
-                <option value="Polo Industrial">Polo Racing</option>
-                <option value="Chaleco de Seguridad">Mandiles</option>
-                <option value="Camisa de Trabajo">Camisa Racing</option>
-                <option value="Uniforme Completo">Overoles</option>
-                <option value="Personalizado">Camiseta Jersey</option>
+                <option value="Polo llana">Polo llana</option>
+                <option value="Polo racing">Polo racing</option>
+                <option value="Mandil">Mandil</option>
+                <option value="Camisa racing">Camisa racing</option>
+                <option value="Overol">Overol</option>
+                <option value="Camiseta jersey">Camiseta jersey</option>
               </select>
             </div>
             <button type="submit" class="btn btn-success w-100 fw-bold py-2" id="btnRegistrarPedido">
@@ -68,7 +68,7 @@
 
         <!-- Contador -->
         <div class="contador-wrap">
-          <span class="contador-label">📦 Total de pedidos registrados</span>
+          <span class="contador-label">  Total de pedidos registrados</span>
           <span class="contador-numero" id="contadorTotal">0</span>
         </div>
 
