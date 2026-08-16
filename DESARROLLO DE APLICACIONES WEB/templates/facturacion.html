@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - Facturación{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="sec-title text-center">Facturación</h2>
+  <table class="table table-striped mt-4">
+    <thead>
+      <tr><th>N° Factura</th><th>Cliente</th><th>Detalle</th><th>Total</th><th>Fecha</th></tr>
+    </thead>
+    <tbody>
+      {% for f in facturas %}
+      <tr>
+        <td>{{ f.numero }}</td>
+        <td>{{ f.cliente }}</td>
+        <td>{{ f.prenda }}</td>
+        <td>${{ "%.2f"|format(f.total) }}</td>
+        <td>{{ f.fecha }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

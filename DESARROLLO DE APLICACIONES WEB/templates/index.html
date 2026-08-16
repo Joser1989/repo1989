@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - Inicio{% endblock %}
+{% block content %}
+<section id="inicio">
+  <div class="container text-center py-5">
+    <h2>Viste con Identidad,<br/>Trabaja con Estilo</h2>
+    <p class="mx-auto" style="max-width:640px;">En AL WORK diseñamos y comercializamos ropa de trabajo y uniformes corporativos de alta calidad para empresas, equipos y profesionales del Ecuador.</p>
+    <a href="{{ url_for('ver_productos') }}" class="btn btn-warning btn-lg px-4 py-3 fw-bold">Ver Productos</a>
+  </div>
+</section>
+{% endblock %}

@@ -49,7 +49,7 @@ function cargarSeccion(nombre) {
     '  <p class="mt-3 mb-0">Cargando contenido...</p>' +
     '</div>';
 
-  fetch('templates/' + nombre + '.html')
+  fetch('templates/seccion-' + nombre + '.html')
     .then(function (respuesta) {
       if (!respuesta.ok) throw new Error('No se encontró templates/' + nombre + '.html');
       return respuesta.text();

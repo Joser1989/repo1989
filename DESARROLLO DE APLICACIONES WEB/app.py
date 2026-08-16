@@ -1,0 +1,67 @@
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+# ─── DATOS DEMOSTRATIVOS (sin base de datos por ahora) ───
+
+productos = [
+    {"nombre": "Polo Manga Larga", "precio": 14.00, "imagen": "polo1.png",
+     "descripcion": "Ideal para equipos industriales y de logística. Tela dry-fit resistente.", "disponible": True},
+    {"nombre": "Polo Técnico Manga Corta", "precio": 16.00, "imagen": "polo2.jpg",
+     "descripcion": "Corte ergonómico, alta transpirabilidad, ideal para trabajo en campo.", "disponible": True},
+    {"nombre": "Polo Abasto 589", "precio": 16.00, "imagen": "polo3.jpg",
+     "descripcion": "Diseño moderno con franjas decorativas y bordado de logo incluido.", "disponible": True},
+    {"nombre": "Polo Tricolor Racing", "precio": 17.00, "imagen": "polo4.jpg",
+     "descripcion": "Tres bloques de color, ideal para uniformes de equipo.", "disponible": True},
+    {"nombre": "Polo Bicolor Hard Work", "precio": 19.00, "imagen": "polo5.jpg",
+     "descripcion": "Refuerzos en hombros, tejido anti-desgarro.", "disponible": True},
+    {"nombre": "Polo Sport Blanco", "precio": 16.00, "imagen": "polo6.png",
+     "descripcion": "Elegante y funcional, apto para oficina y eventos corporativos.", "disponible": True},
+    {"nombre": "Polo Premium Tricolor", "precio": 18.00, "imagen": "polo7.jpg",
+     "descripcion": "Tela piqué de alta gama con bordado o DTF.", "disponible": False},
+    {"nombre": "Polo Corporativo Azul Royale", "precio": 17.00, "imagen": "polo8.jpg",
+     "descripcion": "Color azul intenso con paneles blancos.", "disponible": True},
+]
+
+clientes = [
+    {"nombre": "Mecánica Torres", "tipo": "Mecánica automotriz", "contacto": "0991234567", "ciudad": "Quito"},
+    {"nombre": "MotoExpress Llano Chico", "tipo": "Mecánica de motos", "contacto": "0987654321", "ciudad": "Quito"},
+    {"nombre": "Restaurante El Fogón", "tipo": "Restaurante", "contacto": "0998765432", "ciudad": "Quito"},
+    {"nombre": "Taller Automotriz Rivera", "tipo": "Mecánica automotriz", "contacto": "0976543210", "ciudad": "Quito"},
+]
+
+proveedores = [
+    {"nombre": "Almacenes José Puebla", "tipo": "Mayorista de telas", "contacto": "022345678", "ciudad": "Quito"},
+    {"nombre": "Lindtex", "tipo": "Mayorista de telas", "contacto": "022987654", "ciudad": "Quito"},
+]
+
+facturas = [
+    {"numero": "001", "cliente": "Mecánica Torres", "prenda": "Polo racing (x15)", "total": 255.00, "fecha": "10/08/2026"},
+    {"numero": "002", "cliente": "Restaurante El Fogón", "prenda": "Mandiles (x8)", "total": 96.00, "fecha": "12/08/2026"},
+    {"numero": "003", "cliente": "MotoExpress Llano Chico", "prenda": "Camisa racing (x10)", "total": 170.00, "fecha": "13/08/2026"},
+]
+
+# ─── RUTAS ───
+
+@app.route('/')
+def inicio():
+    return render_template('index.html', active='inicio')
+
+@app.route('/productos')
+def ver_productos():
+    return render_template('productos.html', productos=productos, active='productos')
+
+@app.route('/clientes')
+def ver_clientes():
+    return render_template('clientes.html', clientes=clientes, active='clientes')
+
+@app.route('/proveedores')
+def ver_proveedores():
+    return render_template('proveedores.html', proveedores=proveedores, active='proveedores')
+
+@app.route('/facturacion')
+def ver_facturacion():
+    return render_template('facturacion.html', facturas=facturas, active='facturacion')
+
+if __name__ == '__main__':
+    app.run(debug=True)

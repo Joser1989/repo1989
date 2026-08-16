@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - Clientes{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="sec-title text-center">Nuestros Clientes</h2>
+  <table class="table table-striped mt-4">
+    <thead>
+      <tr><th>Nombre</th><th>Tipo de negocio</th><th>Contacto</th><th>Ciudad</th></tr>
+    </thead>
+    <tbody>
+      {% for c in clientes %}
+      <tr>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.tipo }}</td>
+        <td>{{ c.contacto }}</td>
+        <td>{{ c.ciudad }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
