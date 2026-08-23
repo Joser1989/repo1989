@@ -3,8 +3,18 @@
 {% block content %}
 <section id="inicio">
   <div class="container text-center py-5">
-    <h2>Viste con Identidad,<br/>Trabaja con Estilo</h2>
-    <p class="mx-auto" style="max-width:640px;">En AL WORK diseñamos y comercializamos ropa de trabajo y uniformes corporativos de alta calidad para empresas, equipos y profesionales del Ecuador.</p>
+    <h2>{{ empresa.slogan }}</h2>
+    <p class="mx-auto" style="max-width:640px;">
+      En {{ empresa.nombre|upper }} diseñamos y comercializamos ropa de trabajo y uniformes
+      corporativos de alta calidad para empresas, equipos y profesionales del Ecuador.
+    </p>
+
+    {% if total_productos > 0 %}
+      <p class="fw-bold">Tenemos {{ total_productos }} productos disponibles en catálogo.</p>
+    {% else %}
+      <p class="fw-bold text-danger">Catálogo en actualización, vuelve pronto.</p>
+    {% endif %}
+
     <a href="{{ url_for('ver_productos') }}" class="btn btn-warning btn-lg px-4 py-3 fw-bold">Ver Productos</a>
   </div>
 </section>

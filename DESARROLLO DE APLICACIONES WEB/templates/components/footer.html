@@ -1,0 +1,15 @@
+<footer>
+  <p><strong>{{ empresa.nombre|upper }}</strong> {{ empresa.slogan }}</p>
+  <p>
+    Tel: <strong>{{ empresa.telefono }}</strong> &nbsp;|&nbsp;
+    Dirección: <strong>{{ empresa.direccion }}</strong> &nbsp;|&nbsp;
+
+    {% if total_productos > 0 %}
+      Catálogo activo: <strong>{{ total_productos }} productos</strong>
+    {% else %}
+      <strong>Catálogo en actualización</strong>
+    {% endif %}
+  </p>
+  <p>Estudiantes: <strong>José Alberto Ramírez "C" – Carlos Santiago Ramírez "D"</strong> &nbsp;|&nbsp; Asignatura: <strong>Desarrollo de Aplicaciones Web</strong> &nbsp;|&nbsp; Año: <strong>{{ empresa.anio }}</strong></p>
+  <p style="margin-top:6px; font-size:0.78rem;">Universidad Estatal Amazónica · Tecnologías de la Información · Cuarto Semestre</p>
+</footer>

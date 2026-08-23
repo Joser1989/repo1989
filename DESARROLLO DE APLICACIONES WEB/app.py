@@ -41,6 +41,23 @@ facturas = [
     {"numero": "003", "cliente": "MotoExpress Llano Chico", "prenda": "Camisa racing (x10)", "total": 170.00, "fecha": "13/08/2026"},
 ]
 
+# ─── DATOS DE LA EMPRESA (diccionario / objeto estructurado) ───
+
+empresa = {
+    "nombre": "AL WORK",
+    "slogan": "Viste con Identidad, Trabaja con Estilo",
+    "telefono": "0980099875",
+    "direccion": "Gran Colombia y Paquisha, Quito",
+    "anio": 2026
+}
+
+# Este context_processor envía "empresa" y "total_productos" a TODAS las
+# plantillas automáticamente (incluidos navbar.html y footer.html),
+# sin necesidad de repetirlo en cada render_template().
+@app.context_processor
+def datos_globales():
+    return dict(empresa=empresa, total_productos=len(productos))
+
 # ─── RUTAS ───
 
 @app.route('/')
