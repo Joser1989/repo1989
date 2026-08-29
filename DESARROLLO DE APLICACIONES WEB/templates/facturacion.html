@@ -3,9 +3,12 @@
 {% block content %}
 <section class="container py-5">
   <h2 class="sec-title text-center">Facturación</h2>
+  <div class="text-center mt-3">
+    <a href="{{ url_for('formulario_facturacion') }}" class="btn btn-gold">+ Nueva factura</a>
+  </div>
   <table class="table table-striped mt-4">
     <thead>
-      <tr><th>N° Factura</th><th>Cliente</th><th>Detalle</th><th>Total</th><th>Fecha</th></tr>
+      <tr><th>N° Factura</th><th>Cliente</th><th>Detalle</th><th>Total</th><th>Fecha</th><th></th></tr>
     </thead>
     <tbody>
       {% for f in facturas %}
@@ -15,6 +18,7 @@
         <td>{{ f.prenda }}</td>
         <td>${{ "%.2f"|format(f.total) }}</td>
         <td>{{ f.fecha }}</td>
+        <td><a href="{{ url_for('formulario_facturacion', factura_id=loop.index0) }}" class="btn btn-sm btn-outline-dark">Editar</a></td>
       </tr>
       {% endfor %}
     </tbody>

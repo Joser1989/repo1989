@@ -1,6 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
+
+from forms.producto_form import ProductoForm
+from forms.cliente_form import ClienteForm
+from forms.proveedor_form import ProveedorForm
+from forms.facturacion_form import FacturacionForm
 
 app = Flask(__name__)
+
+# SECRET_KEY necesaria para que Flask-WTF genere y valide el token CSRF
+# de cada formulario (form.hidden_tag()).
+app.config['SECRET_KEY'] = 'alwork-clave-secreta-2026'
 
 # ─── DATOS DEMOSTRATIVOS (sin base de datos por ahora) ───
 
@@ -79,6 +88,101 @@ def ver_proveedores():
 @app.route('/facturacion')
 def ver_facturacion():
     return render_template('facturacion.html', facturas=facturas, active='facturacion')
+
+# ─── RUTAS DE FORMULARIOS (Flask-WTF) ───
+# Cada ruta acepta GET (mostrar el formulario) y POST (procesar los datos).
+# La misma clase de formulario y la misma plantilla se reutilizan para
+# "registrar" (sin id en la URL) y "editar" (con id en la URL).
+
+@app.route('/productos/formulario', methods=['GET', 'POST'])
+@app.route('/productos/formulario/<int:producto_id>', methods=['GET', 'POST'])
+def formulario_producto(producto_id=None):
+    editar = producto_id is not None
+    form = ProductoForm(data=productos[producto_id]) if editar else ProductoForm()
+
+    if form.validate_on_submit():
+        datos = {
+            "nombre": form.nombre.data,
+            "precio": float(form.precio.data),
+            "imagen": form.imagen.data,
+            "descripcion": form.descripcion.data,
+            "disponible": form.disponible.data
+        }
+        if editar:
+            productos[producto_id] = datos
+        else:
+            productos.append(datos)
+        return redirect(url_for('ver_productos'))
+
+    return render_template('formulario_producto.html', form=form, editar=editar, active='productos')
+
+
+@app.route('/clientes/formulario', methods=['GET', 'POST'])
+@app.route('/clientes/formulario/<int:cliente_id>', methods=['GET', 'POST'])
+def formulario_cliente(cliente_id=None):
+    editar = cliente_id is not None
+    form = ClienteForm(data=clientes[cliente_id]) if editar else ClienteForm()
+
+    if form.validate_on_submit():
+        datos = {
+            "nombre": form.nombre.data,
+            "tipo": form.tipo.data,
+            "contacto": form.contacto.data,
+            "ciudad": form.ciudad.data
+        }
+        if editar:
+            clientes[cliente_id] = datos
+        else:
+            clientes.append(datos)
+        return redirect(url_for('ver_clientes'))
+
+    return render_template('formulario_cliente.html', form=form, editar=editar, active='clientes')
+
+
+@app.route('/proveedores/formulario', methods=['GET', 'POST'])
+@app.route('/proveedores/formulario/<int:proveedor_id>', methods=['GET', 'POST'])
+def formulario_proveedor(proveedor_id=None):
+    editar = proveedor_id is not None
+    form = ProveedorForm(data=proveedores[proveedor_id]) if editar else ProveedorForm()
+
+    if form.validate_on_submit():
+        datos = {
+            "nombre": form.nombre.data,
+            "tipo": form.tipo.data,
+            "contacto": form.contacto.data,
+            "ciudad": form.ciudad.data
+        }
+        if editar:
+            proveedores[proveedor_id] = datos
+        else:
+            proveedores.append(datos)
+        return redirect(url_for('ver_proveedores'))
+
+    return render_template('formulario_proveedor.html', form=form, editar=editar, active='proveedores')
+
+
+@app.route('/facturacion/formulario', methods=['GET', 'POST'])
+@app.route('/facturacion/formulario/<int:factura_id>', methods=['GET', 'POST'])
+def formulario_facturacion(factura_id=None):
+    editar = factura_id is not None
+    form = FacturacionForm(data=facturas[factura_id]) if editar else FacturacionForm()
+
+    if form.validate_on_submit():
+        datos = {
+            "numero": form.numero.data,
+            "cliente": form.cliente.data,
+            "prenda": form.prenda.data,
+            "total": float(form.total.data),
+            "fecha": form.fecha.data
+        }
+        if editar:
+            facturas[factura_id] = datos
+        else:
+            facturas.append(datos)
+        return redirect(url_for('ver_facturacion'))
+
+    return render_template('formulario_facturacion.html', form=form, editar=editar, active='facturacion')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

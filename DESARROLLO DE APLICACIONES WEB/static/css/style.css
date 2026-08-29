@@ -107,3 +107,20 @@ footer { background: #0d0d1a; color: #888; text-align: center; padding: 28px 24p
 footer strong { color: var(--color-gold); }
 
 table thead { background: var(--color-dark); color: var(--color-gold); }
+/* ─── Estilos de formularios (Flask-WTF / Semana 11) ─── */
+.form-aw {
+  background: #fff;
+  padding: 28px 32px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.btn-gold {
+  background: var(--color-gold);
+  color: var(--color-dark);
+  font-weight: 700;
+  border: none;
+}
+.btn-gold:hover {
+  background: #ddad0f;
+  color: var(--color-dark);
+}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - {% if editar %}Editar{% else %}Nueva{% endif %} Factura{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="sec-title text-center mb-4">{% if editar %}Editar Factura{% else %}Nueva Factura{% endif %}</h2>
+
+  <form method="POST" class="form-aw mx-auto" style="max-width: 600px;" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.numero.label(class="form-label") }}
+      {{ form.numero(class="form-control" + (" is-invalid" if form.numero.errors else "")) }}
+      {% for error in form.numero.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.cliente.label(class="form-label") }}
+      {{ form.cliente(class="form-control" + (" is-invalid" if form.cliente.errors else "")) }}
+      {% for error in form.cliente.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.prenda.label(class="form-label") }}
+      {{ form.prenda(class="form-control" + (" is-invalid" if form.prenda.errors else "")) }}
+      {% for error in form.prenda.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.total.label(class="form-label") }}
+      {{ form.total(class="form-control" + (" is-invalid" if form.total.errors else "")) }}
+      {% for error in form.total.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.fecha.label(class="form-label") }}
+      {{ form.fecha(class="form-control" + (" is-invalid" if form.fecha.errors else ""), placeholder="dd/mm/aaaa") }}
+      {% for error in form.fecha.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="d-grid gap-2 mt-4">
+      {{ form.submit(class="btn btn-gold") }}
+      <a href="{{ url_for('ver_facturacion') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

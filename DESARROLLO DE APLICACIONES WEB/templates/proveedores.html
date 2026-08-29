@@ -3,9 +3,12 @@
 {% block content %}
 <section class="container py-5">
   <h2 class="sec-title text-center">Nuestros Proveedores</h2>
+  <div class="text-center mt-3">
+    <a href="{{ url_for('formulario_proveedor') }}" class="btn btn-gold">+ Agregar proveedor</a>
+  </div>
   <table class="table table-striped mt-4">
     <thead>
-      <tr><th>Nombre</th><th>Tipo</th><th>Contacto</th><th>Ciudad</th></tr>
+      <tr><th>Nombre</th><th>Tipo</th><th>Contacto</th><th>Ciudad</th><th></th></tr>
     </thead>
     <tbody>
       {% for p in proveedores %}
@@ -14,6 +17,7 @@
         <td>{{ p.tipo }}</td>
         <td>{{ p.contacto }}</td>
         <td>{{ p.ciudad }}</td>
+        <td><a href="{{ url_for('formulario_proveedor', proveedor_id=loop.index0) }}" class="btn btn-sm btn-outline-dark">Editar</a></td>
       </tr>
       {% endfor %}
     </tbody>

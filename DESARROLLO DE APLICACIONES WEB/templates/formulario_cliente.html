@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - {% if editar %}Editar{% else %}Nuevo{% endif %} Cliente{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="sec-title text-center mb-4">{% if editar %}Editar Cliente{% else %}Nuevo Cliente{% endif %}</h2>
+
+  <form method="POST" class="form-aw mx-auto" style="max-width: 600px;" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.nombre.label(class="form-label") }}
+      {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "")) }}
+      {% for error in form.nombre.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.tipo.label(class="form-label") }}
+      {{ form.tipo(class="form-control" + (" is-invalid" if form.tipo.errors else "")) }}
+      {% for error in form.tipo.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.contacto.label(class="form-label") }}
+      {{ form.contacto(class="form-control" + (" is-invalid" if form.contacto.errors else "")) }}
+      {% for error in form.contacto.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.ciudad.label(class="form-label") }}
+      {{ form.ciudad(class="form-control" + (" is-invalid" if form.ciudad.errors else "")) }}
+      {% for error in form.ciudad.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="d-grid gap-2 mt-4">
+      {{ form.submit(class="btn btn-gold") }}
+      <a href="{{ url_for('ver_clientes') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
