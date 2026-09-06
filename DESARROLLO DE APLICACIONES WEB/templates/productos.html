@@ -19,7 +19,7 @@
           {% else %}
             <p class="precio-tag text-danger">Agotado temporalmente</p>
           {% endif %}
-          <a href="{{ url_for('formulario_producto', producto_id=loop.index0) }}" class="btn btn-sm btn-outline-dark mt-2">Editar</a>
+          <a href="{{ url_for('formulario_producto', producto_id=p.id) }}" class="btn btn-sm btn-outline-dark mt-2">Editar</a>
         </div>
       </div>
     </div>

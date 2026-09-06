@@ -1,3 +1,6 @@
+import os
+import sqlite3
+
 from flask import Flask, render_template, redirect, url_for, request
 
 from forms.producto_form import ProductoForm
@@ -11,26 +14,45 @@ app = Flask(__name__)
 # de cada formulario (form.hidden_tag()).
 app.config['SECRET_KEY'] = 'alwork-clave-secreta-2026'
 
-# ─── DATOS DEMOSTRATIVOS (sin base de datos por ahora) ───
+# ─── PERSISTENCIA LOCAL CON SQLITE (módulo productos) ───
+# A partir de la Semana 12, el módulo de productos deja de usar una lista
+# de Python en memoria y pasa a almacenarse de forma persistente en SQLite.
 
-productos = [
-    {"nombre": "Polo Manga Larga", "precio": 14.00, "imagen": "polo1.png",
-     "descripcion": "Ideal para equipos industriales y de logística. Tela dry-fit resistente.", "disponible": True},
-    {"nombre": "Polo Técnico Manga Corta", "precio": 16.00, "imagen": "polo2.jpg",
-     "descripcion": "Corte ergonómico, alta transpirabilidad, ideal para trabajo en campo.", "disponible": True},
-    {"nombre": "Polo Abasto 589", "precio": 16.00, "imagen": "polo3.jpg",
-     "descripcion": "Diseño moderno con franjas decorativas y bordado de logo incluido.", "disponible": True},
-    {"nombre": "Polo Tricolor Racing", "precio": 17.00, "imagen": "polo4.jpg",
-     "descripcion": "Tres bloques de color, ideal para uniformes de equipo.", "disponible": True},
-    {"nombre": "Polo Bicolor Hard Work", "precio": 19.00, "imagen": "polo5.jpg",
-     "descripcion": "Refuerzos en hombros, tejido anti-desgarro.", "disponible": True},
-    {"nombre": "Polo Sport Blanco", "precio": 16.00, "imagen": "polo6.png",
-     "descripcion": "Elegante y funcional, apto para oficina y eventos corporativos.", "disponible": True},
-    {"nombre": "Polo Premium Tricolor", "precio": 18.00, "imagen": "polo7.jpg",
-     "descripcion": "Tela piqué de alta gama con bordado o DTF.", "disponible": False},
-    {"nombre": "Polo Corporativo Azul Royale", "precio": 17.00, "imagen": "polo8.jpg",
-     "descripcion": "Color azul intenso con paneles blancos.", "disponible": True},
-]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+DB_PATH = os.path.join(DATA_DIR, 'ferreteria.db')
+
+
+def get_db_connection():
+    """Abre una conexión a la base de datos SQLite. row_factory permite
+    acceder a cada fila como diccionario (fila['nombre'] o fila.nombre)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    """Crea la carpeta data/ y la tabla productos si todavía no existen.
+    Se ejecuta una sola vez al arrancar la aplicación."""
+    os.makedirs(DATA_DIR, exist_ok=True)
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS productos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            imagen TEXT NOT NULL,
+            descripcion TEXT NOT NULL,
+            disponible INTEGER NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+
+init_db()
+
+# ─── DATOS DEMOSTRATIVOS (módulos que aún no requieren persistencia esta semana) ───
 
 clientes = [
     {"nombre": "Mecánica Torres", "tipo": "Mecánica automotriz", "contacto": "0991234567", "ciudad": "Quito"},
@@ -65,7 +87,10 @@ empresa = {
 # sin necesidad de repetirlo en cada render_template().
 @app.context_processor
 def datos_globales():
-    return dict(empresa=empresa, total_productos=len(productos))
+    conn = get_db_connection()
+    total_productos = conn.execute('SELECT COUNT(*) FROM productos').fetchone()[0]
+    conn.close()
+    return dict(empresa=empresa, total_productos=total_productos)
 
 # ─── RUTAS ───
 
@@ -75,6 +100,9 @@ def inicio():
 
 @app.route('/productos')
 def ver_productos():
+    conn = get_db_connection()
+    productos = conn.execute('SELECT * FROM productos ORDER BY id').fetchall()
+    conn.close()
     return render_template('productos.html', productos=productos, active='productos')
 
 @app.route('/clientes')
@@ -98,22 +126,34 @@ def ver_facturacion():
 @app.route('/productos/formulario/<int:producto_id>', methods=['GET', 'POST'])
 def formulario_producto(producto_id=None):
     editar = producto_id is not None
-    form = ProductoForm(data=productos[producto_id]) if editar else ProductoForm()
+    conn = get_db_connection()
+
+    if editar:
+        producto_existente = conn.execute(
+            'SELECT * FROM productos WHERE id = ?', (producto_id,)
+        ).fetchone()
+        form = ProductoForm(data=dict(producto_existente)) if request.method == 'GET' else ProductoForm()
+    else:
+        form = ProductoForm()
 
     if form.validate_on_submit():
-        datos = {
-            "nombre": form.nombre.data,
-            "precio": float(form.precio.data),
-            "imagen": form.imagen.data,
-            "descripcion": form.descripcion.data,
-            "disponible": form.disponible.data
-        }
         if editar:
-            productos[producto_id] = datos
+            conn.execute(
+                'UPDATE productos SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, disponible = ? WHERE id = ?',
+                (form.nombre.data, float(form.precio.data), form.imagen.data,
+                 form.descripcion.data, int(form.disponible.data), producto_id)
+            )
         else:
-            productos.append(datos)
+            conn.execute(
+                'INSERT INTO productos (nombre, precio, imagen, descripcion, disponible) VALUES (?, ?, ?, ?, ?)',
+                (form.nombre.data, float(form.precio.data), form.imagen.data,
+                 form.descripcion.data, int(form.disponible.data))
+            )
+        conn.commit()
+        conn.close()
         return redirect(url_for('ver_productos'))
 
+    conn.close()
     return render_template('formulario_producto.html', form=form, editar=editar, active='productos')
 
 
