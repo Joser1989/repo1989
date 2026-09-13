@@ -19,7 +19,11 @@
           {% else %}
             <p class="precio-tag text-danger">Agotado temporalmente</p>
           {% endif %}
-          <a href="{{ url_for('formulario_producto', producto_id=p.id) }}" class="btn btn-sm btn-outline-dark mt-2">Editar</a>
+         <a href="{{ url_for('formulario_producto', producto_id=p.id) }}" class="btn btn-sm btn-outline-dark mt-2">Editar</a>
+<form action="{{ url_for('eliminar_producto', producto_id=p.id) }}" method="POST" class="d-inline"
+      onsubmit="return confirm('¿Seguro que deseas eliminar {{ p.nombre }}? Esta acción no se puede deshacer.');">
+  <button type="submit" class="btn btn-sm btn-outline-danger mt-2">Eliminar</button>
+</form>
         </div>
       </div>
     </div>
