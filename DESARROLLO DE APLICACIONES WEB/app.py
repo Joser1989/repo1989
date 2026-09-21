@@ -7,9 +7,12 @@ from forms.cliente_form import ClienteForm
 from forms.proveedor_form import ProveedorForm
 from forms.facturacion_form import FacturacionForm
 
-from conexion.conexion import get_connection
+from conexion.conexion import get_connection, init_db
 
 app = Flask(__name__)
+
+# Crea data/alwork.db y las tablas (sql/esquema.sql) si todavía no existen.
+init_db()
 
 # SECRET_KEY necesaria para que Flask-WTF genere y valide el token CSRF
 # de cada formulario (form.hidden_tag()).
@@ -64,7 +67,7 @@ def inicio():
 @app.route('/productos')
 def ver_productos():
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     cursor.execute('''
         SELECT p.*, pr.nombre AS proveedor_nombre
         FROM productos p
@@ -96,25 +99,25 @@ def ver_facturacion():
 def formulario_producto(producto_id=None):
     editar = producto_id is not None
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     if editar:
-        cursor.execute('SELECT * FROM productos WHERE id = %s', (producto_id,))
+        cursor.execute('SELECT * FROM productos WHERE id = ?', (producto_id,))
         producto_existente = cursor.fetchone()
-        form = ProductoForm(data=producto_existente) if request.method == 'GET' else ProductoForm()
+        form = ProductoForm(data=dict(producto_existente) if producto_existente else None) if request.method == 'GET' else ProductoForm()
     else:
         form = ProductoForm()
 
     if form.validate_on_submit():
         if editar:
             cursor.execute(
-                'UPDATE productos SET nombre = %s, precio = %s, imagen = %s, descripcion = %s, disponible = %s WHERE id = %s',
+                'UPDATE productos SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, disponible = ? WHERE id = ?',
                 (form.nombre.data, float(form.precio.data), form.imagen.data,
                  form.descripcion.data, int(form.disponible.data), producto_id)
             )
         else:
             cursor.execute(
-                'INSERT INTO productos (nombre, precio, imagen, descripcion, disponible) VALUES (%s, %s, %s, %s, %s)',
+                'INSERT INTO productos (nombre, precio, imagen, descripcion, disponible) VALUES (?, ?, ?, ?, ?)',
                 (form.nombre.data, float(form.precio.data), form.imagen.data,
                  form.descripcion.data, int(form.disponible.data))
             )
@@ -130,7 +133,7 @@ def formulario_producto(producto_id=None):
 def eliminar_producto(producto_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM productos WHERE id = %s', (producto_id,))
+    cursor.execute('DELETE FROM productos WHERE id = ?', (producto_id,))
     conn.commit()
     cursor.close()
     conn.close()
