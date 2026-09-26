@@ -37,6 +37,16 @@ CREATE TABLE IF NOT EXISTS facturas (
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 
+-- Tabla de usuarios del sistema (Semana 14 - login con Flask-Login)
+-- El campo "usuario" es UNIQUE para evitar registros duplicados.
+-- El campo "password" NUNCA guarda texto plano: siempre un hash generado
+-- con generate_password_hash() (Werkzeug) antes del INSERT.
+CREATE TABLE IF NOT EXISTS usuarios (
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario  TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
+);
+
 -- Datos iniciales (solo se insertan si no existen, para no duplicar en cada arranque)
 INSERT INTO proveedores (nombre, telefono, correo)
 SELECT 'Almacenes José Puebla', '022345678', 'contacto@josepuebla.com'

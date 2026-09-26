@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - Registro de usuario{% endblock %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="sec-title text-center mb-4">Crear cuenta</h2>
+
+  <form method="POST" class="form-aw mx-auto" style="max-width: 450px;" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.usuario.label(class="form-label") }}
+      {{ form.usuario(class="form-control" + (" is-invalid" if form.usuario.errors else ""), autofocus=true) }}
+      {% for error in form.usuario.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.password.label(class="form-label") }}
+      {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+      {% for error in form.password.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.confirmar.label(class="form-label") }}
+      {{ form.confirmar(class="form-control" + (" is-invalid" if form.confirmar.errors else "")) }}
+      {% for error in form.confirmar.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="d-grid gap-2 mt-4">
+      {{ form.submit(class="btn btn-gold") }}
+    </div>
+
+    <p class="text-center mt-3">
+      ¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

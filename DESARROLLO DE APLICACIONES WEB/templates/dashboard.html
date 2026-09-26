@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}AL WORK - Panel{% endblock %}
+{% block content %}
+<section class="container py-5 text-center">
+  <h2 class="sec-title mb-3">Bienvenido, {{ current_user.usuario }}</h2>
+  <p class="mb-4">Sesión iniciada correctamente. Desde aquí puedes ir a los módulos administrativos.</p>
+
+  <div class="row g-3 justify-content-center">
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('ver_productos') }}" class="btn btn-gold w-100">Productos</a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('ver_clientes') }}" class="btn btn-gold w-100">Clientes</a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('ver_proveedores') }}" class="btn btn-gold w-100">Proveedores</a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('ver_facturacion') }}" class="btn btn-gold w-100">Facturación</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
