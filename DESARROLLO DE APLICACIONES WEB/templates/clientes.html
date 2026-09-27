@@ -15,9 +15,15 @@
       <tr>
         <td>{{ c.nombre }}</td>
         <td>{{ c.tipo }}</td>
-        <td>{{ c.contacto }}</td>
+        <td>{{ c.telefono }}</td>
         <td>{{ c.ciudad }}</td>
-        <td><a href="{{ url_for('formulario_cliente', cliente_id=loop.index0) }}" class="btn btn-sm btn-outline-dark">Editar</a></td>
+        <td>
+          <a href="{{ url_for('formulario_cliente', cliente_id=c.id_cliente) }}" class="btn btn-sm btn-outline-dark">Editar</a>
+          <form action="{{ url_for('eliminar_cliente', cliente_id=c.id_cliente) }}" method="POST" class="d-inline"
+                onsubmit="return confirm('¿Seguro que deseas eliminar {{ c.nombre }}? Esta acción no se puede deshacer.');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

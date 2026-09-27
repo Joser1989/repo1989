@@ -17,7 +17,7 @@ class Usuario(UserMixin):
         """Usado por load_user() para reconstruir el usuario en cada request."""
         conn = get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT id, usuario FROM usuarios WHERE id = ?', (user_id,))
+        cursor.execute('SELECT id, usuario FROM usuarios WHERE id = %s', (user_id,))
         fila = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -33,7 +33,7 @@ class Usuario(UserMixin):
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT id, usuario, password FROM usuarios WHERE usuario = ?',
+            'SELECT id, usuario, password FROM usuarios WHERE usuario = %s',
             (nombre_usuario,)
         )
         fila = cursor.fetchone()
@@ -43,12 +43,12 @@ class Usuario(UserMixin):
 
     @staticmethod
     def crear(nombre_usuario, password_hash):
-        """Inserta un nuevo usuario. Lanza sqlite3.IntegrityError si el
+        """Inserta un nuevo usuario. Lanza psycopg2.errors.UniqueViolation si el
         nombre de usuario ya existe (columna UNIQUE)."""
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO usuarios (usuario, password) VALUES (?, ?)',
+            'INSERT INTO usuarios (usuario, password) VALUES (%s, %s)',
             (nombre_usuario, password_hash)
         )
         conn.commit()

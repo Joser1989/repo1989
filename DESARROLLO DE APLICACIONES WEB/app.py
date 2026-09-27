@@ -1,5 +1,4 @@
 import os
-import sqlite3
 
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import (
@@ -7,6 +6,7 @@ from flask_login import (
     login_required, current_user
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from psycopg2 import errors as pg_errors
 
 from forms.producto_form import ProductoForm
 from forms.cliente_form import ClienteForm
@@ -20,7 +20,7 @@ from models import Usuario
 
 app = Flask(__name__)
 
-# Crea data/alwork.db y las tablas (sql/esquema.sql) si todavía no existen.
+# Crea alwork_db y las tablas (sql/esquema.sql) si todavía no existen.
 init_db()
 
 # SECRET_KEY necesaria para que Flask-WTF genere y valide el token CSRF
@@ -45,26 +45,6 @@ def load_user(user_id):
     return Usuario.obtener_por_id(user_id)
 
 
-# ─── DATOS DEMOSTRATIVOS (módulos que aún no requieren persistencia esta semana) ───
-
-clientes = [
-    {"nombre": "Mecánica Torres", "tipo": "Mecánica automotriz", "contacto": "0991234567", "ciudad": "Quito"},
-    {"nombre": "MotoExpress Llano Chico", "tipo": "Mecánica de motos", "contacto": "0987654321", "ciudad": "Quito"},
-    {"nombre": "Restaurante El Fogón", "tipo": "Restaurante", "contacto": "0998765432", "ciudad": "Quito"},
-    {"nombre": "Taller Automotriz Rivera", "tipo": "Mecánica automotriz", "contacto": "0976543210", "ciudad": "Quito"},
-]
-
-proveedores = [
-    {"nombre": "Almacenes José Puebla", "tipo": "Mayorista de telas", "contacto": "022345678", "ciudad": "Quito"},
-    {"nombre": "Lindtex", "tipo": "Mayorista de telas", "contacto": "022987654", "ciudad": "Quito"},
-]
-
-facturas = [
-    {"numero": "001", "cliente": "Mecánica Torres", "prenda": "Polo racing (x15)", "total": 255.00, "fecha": "10/08/2026"},
-    {"numero": "002", "cliente": "Restaurante El Fogón", "prenda": "Mandiles (x8)", "total": 96.00, "fecha": "12/08/2026"},
-    {"numero": "003", "cliente": "MotoExpress Llano Chico", "prenda": "Camisa racing (x10)", "total": 170.00, "fecha": "13/08/2026"},
-]
-
 # ─── DATOS DE LA EMPRESA (diccionario / objeto estructurado) ───
 
 empresa = {
@@ -83,8 +63,8 @@ empresa = {
 def datos_globales():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT COUNT(*) FROM productos')
-    total_productos = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT(*) AS total FROM productos')
+    total_productos = cursor.fetchone()['total']
     cursor.close()
     conn.close()
     return dict(empresa=empresa, total_productos=total_productos)
@@ -110,7 +90,7 @@ def registro():
         password_hash = generate_password_hash(form.password.data)
         try:
             Usuario.crear(form.usuario.data, password_hash)
-        except sqlite3.IntegrityError:
+        except pg_errors.UniqueViolation:
             # Salta si el nombre de usuario ya existe (columna UNIQUE).
             flash('Ese nombre de usuario ya está en uso, elige otro.', 'danger')
             return render_template('registro.html', form=form, active='registro')
@@ -178,19 +158,42 @@ def ver_productos():
 @app.route('/clientes')
 @login_required
 def ver_clientes():
-    return render_template('clientes.html', clientes=clientes, active='clientes')
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM clientes ORDER BY id_cliente')
+    clientes_db = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('clientes.html', clientes=clientes_db, active='clientes')
 
 
 @app.route('/proveedores')
 @login_required
 def ver_proveedores():
-    return render_template('proveedores.html', proveedores=proveedores, active='proveedores')
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM proveedores ORDER BY id_proveedor')
+    proveedores_db = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('proveedores.html', proveedores=proveedores_db, active='proveedores')
 
 
 @app.route('/facturacion')
 @login_required
 def ver_facturacion():
-    return render_template('facturacion.html', facturas=facturas, active='facturacion')
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT f.*, c.nombre AS cliente_nombre
+        FROM facturas f
+        LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
+        ORDER BY f.id_factura
+    ''')
+    facturas_db = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('facturacion.html', facturas=facturas_db, active='facturacion')
 
 
 # ─── RUTAS DE FORMULARIOS (Flask-WTF) — protegidas también ───
@@ -206,25 +209,41 @@ def formulario_producto(producto_id=None):
     conn = get_connection()
     cursor = conn.cursor()
 
+    cursor.execute('SELECT id_proveedor, nombre FROM proveedores ORDER BY nombre')
+    proveedores_lista = cursor.fetchall()
+    opciones_proveedor = [(p['id_proveedor'], p['nombre']) for p in proveedores_lista]
+
     if editar:
-        cursor.execute('SELECT * FROM productos WHERE id = ?', (producto_id,))
+        cursor.execute('SELECT * FROM productos WHERE id = %s', (producto_id,))
         producto_existente = cursor.fetchone()
         form = ProductoForm(data=dict(producto_existente) if producto_existente else None) if request.method == 'GET' else ProductoForm()
     else:
         form = ProductoForm()
+        if request.method == 'GET':
+            # Por defecto selecciona Lindtex si existe
+            lindtex = next((p for p in proveedores_lista if p['nombre'] == 'Lindtex'), None)
+            if lindtex:
+                form.id_proveedor.data = lindtex['id_proveedor']
+
+    form.id_proveedor.choices = opciones_proveedor
 
     if form.validate_on_submit():
         if editar:
             cursor.execute(
-                'UPDATE productos SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, disponible = ? WHERE id = ?',
+                '''UPDATE productos
+                   SET nombre = %s, precio = %s, imagen = %s, descripcion = %s,
+                       disponible = %s, id_proveedor = %s
+                   WHERE id = %s''',
                 (form.nombre.data, float(form.precio.data), form.imagen.data,
-                 form.descripcion.data, int(form.disponible.data), producto_id)
+                 form.descripcion.data, int(form.disponible.data),
+                 form.id_proveedor.data, producto_id)
             )
         else:
             cursor.execute(
-                'INSERT INTO productos (nombre, precio, imagen, descripcion, disponible) VALUES (?, ?, ?, ?, ?)',
+                '''INSERT INTO productos (nombre, precio, imagen, descripcion, disponible, id_proveedor)
+                   VALUES (%s, %s, %s, %s, %s, %s)''',
                 (form.nombre.data, float(form.precio.data), form.imagen.data,
-                 form.descripcion.data, int(form.disponible.data))
+                 form.descripcion.data, int(form.disponible.data), form.id_proveedor.data)
             )
         conn.commit()
         cursor.close()
@@ -241,7 +260,7 @@ def formulario_producto(producto_id=None):
 def eliminar_producto(producto_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM productos WHERE id = ?', (producto_id,))
+    cursor.execute('DELETE FROM productos WHERE id = %s', (producto_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -253,22 +272,52 @@ def eliminar_producto(producto_id):
 @login_required
 def formulario_cliente(cliente_id=None):
     editar = cliente_id is not None
-    form = ClienteForm(data=clientes[cliente_id]) if editar else ClienteForm()
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if editar:
+        cursor.execute('SELECT * FROM clientes WHERE id_cliente = %s', (cliente_id,))
+        cliente_existente = cursor.fetchone()
+        if request.method == 'GET' and cliente_existente:
+            datos_iniciales = dict(cliente_existente)
+            datos_iniciales['contacto'] = datos_iniciales.get('telefono')
+            form = ClienteForm(data=datos_iniciales)
+        else:
+            form = ClienteForm()
+    else:
+        form = ClienteForm()
 
     if form.validate_on_submit():
-        datos = {
-            "nombre": form.nombre.data,
-            "tipo": form.tipo.data,
-            "contacto": form.contacto.data,
-            "ciudad": form.ciudad.data
-        }
         if editar:
-            clientes[cliente_id] = datos
+            cursor.execute(
+                'UPDATE clientes SET nombre = %s, tipo = %s, telefono = %s, ciudad = %s WHERE id_cliente = %s',
+                (form.nombre.data, form.tipo.data, form.contacto.data, form.ciudad.data, cliente_id)
+            )
         else:
-            clientes.append(datos)
+            cursor.execute(
+                'INSERT INTO clientes (nombre, tipo, telefono, ciudad) VALUES (%s, %s, %s, %s)',
+                (form.nombre.data, form.tipo.data, form.contacto.data, form.ciudad.data)
+            )
+        conn.commit()
+        cursor.close()
+        conn.close()
         return redirect(url_for('ver_clientes'))
 
+    cursor.close()
+    conn.close()
     return render_template('formulario_cliente.html', form=form, editar=editar, active='clientes')
+
+
+@app.route('/clientes/eliminar/<int:cliente_id>', methods=['POST'])
+@login_required
+def eliminar_cliente(cliente_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM clientes WHERE id_cliente = %s', (cliente_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('ver_clientes'))
 
 
 @app.route('/proveedores/formulario', methods=['GET', 'POST'])
@@ -276,22 +325,52 @@ def formulario_cliente(cliente_id=None):
 @login_required
 def formulario_proveedor(proveedor_id=None):
     editar = proveedor_id is not None
-    form = ProveedorForm(data=proveedores[proveedor_id]) if editar else ProveedorForm()
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if editar:
+        cursor.execute('SELECT * FROM proveedores WHERE id_proveedor = %s', (proveedor_id,))
+        proveedor_existente = cursor.fetchone()
+        if request.method == 'GET' and proveedor_existente:
+            datos_iniciales = dict(proveedor_existente)
+            datos_iniciales['contacto'] = datos_iniciales.get('telefono')
+            form = ProveedorForm(data=datos_iniciales)
+        else:
+            form = ProveedorForm()
+    else:
+        form = ProveedorForm()
 
     if form.validate_on_submit():
-        datos = {
-            "nombre": form.nombre.data,
-            "tipo": form.tipo.data,
-            "contacto": form.contacto.data,
-            "ciudad": form.ciudad.data
-        }
         if editar:
-            proveedores[proveedor_id] = datos
+            cursor.execute(
+                'UPDATE proveedores SET nombre = %s, tipo = %s, telefono = %s, ciudad = %s WHERE id_proveedor = %s',
+                (form.nombre.data, form.tipo.data, form.contacto.data, form.ciudad.data, proveedor_id)
+            )
         else:
-            proveedores.append(datos)
+            cursor.execute(
+                'INSERT INTO proveedores (nombre, tipo, telefono, ciudad) VALUES (%s, %s, %s, %s)',
+                (form.nombre.data, form.tipo.data, form.contacto.data, form.ciudad.data)
+            )
+        conn.commit()
+        cursor.close()
+        conn.close()
         return redirect(url_for('ver_proveedores'))
 
+    cursor.close()
+    conn.close()
     return render_template('formulario_proveedor.html', form=form, editar=editar, active='proveedores')
+
+
+@app.route('/proveedores/eliminar/<int:proveedor_id>', methods=['POST'])
+@login_required
+def eliminar_proveedor(proveedor_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM proveedores WHERE id_proveedor = %s', (proveedor_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('ver_proveedores'))
 
 
 @app.route('/facturacion/formulario', methods=['GET', 'POST'])
@@ -299,23 +378,63 @@ def formulario_proveedor(proveedor_id=None):
 @login_required
 def formulario_facturacion(factura_id=None):
     editar = factura_id is not None
-    form = FacturacionForm(data=facturas[factura_id]) if editar else FacturacionForm()
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT id_cliente, nombre FROM clientes ORDER BY nombre')
+    clientes_lista = cursor.fetchall()
+    opciones_cliente = [(c['id_cliente'], c['nombre']) for c in clientes_lista]
+
+    if editar:
+        cursor.execute('SELECT * FROM facturas WHERE id_factura = %s', (factura_id,))
+        factura_existente = cursor.fetchone()
+        if request.method == 'GET' and factura_existente:
+            datos_iniciales = dict(factura_existente)
+            datos_iniciales['prenda'] = datos_iniciales.get('detalle')
+            form = FacturacionForm(data=datos_iniciales)
+        else:
+            form = FacturacionForm()
+    else:
+        form = FacturacionForm()
+
+    form.id_cliente.choices = opciones_cliente
 
     if form.validate_on_submit():
-        datos = {
-            "numero": form.numero.data,
-            "cliente": form.cliente.data,
-            "prenda": form.prenda.data,
-            "total": float(form.total.data),
-            "fecha": form.fecha.data
-        }
         if editar:
-            facturas[factura_id] = datos
+            cursor.execute(
+                '''UPDATE facturas
+                   SET numero = %s, id_cliente = %s, detalle = %s, total = %s, fecha = %s
+                   WHERE id_factura = %s''',
+                (form.numero.data, form.id_cliente.data, form.prenda.data,
+                 float(form.total.data), form.fecha.data, factura_id)
+            )
         else:
-            facturas.append(datos)
+            cursor.execute(
+                '''INSERT INTO facturas (numero, id_cliente, detalle, total, fecha)
+                   VALUES (%s, %s, %s, %s, %s)''',
+                (form.numero.data, form.id_cliente.data, form.prenda.data,
+                 float(form.total.data), form.fecha.data)
+            )
+        conn.commit()
+        cursor.close()
+        conn.close()
         return redirect(url_for('ver_facturacion'))
 
+    cursor.close()
+    conn.close()
     return render_template('formulario_facturacion.html', form=form, editar=editar, active='facturacion')
+
+
+@app.route('/facturacion/eliminar/<int:factura_id>', methods=['POST'])
+@login_required
+def eliminar_factura(factura_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM facturas WHERE id_factura = %s', (factura_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('ver_facturacion'))
 
 
 if __name__ == '__main__':

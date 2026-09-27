@@ -40,6 +40,14 @@
       {% endfor %}
     </div>
 
+    <div class="mb-3">
+      {{ form.id_proveedor.label(class="form-label") }}
+      {{ form.id_proveedor(class="form-select" + (" is-invalid" if form.id_proveedor.errors else "")) }}
+      {% for error in form.id_proveedor.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
     <div class="mb-3 form-check">
       {{ form.disponible(class="form-check-input") }}
       {{ form.disponible.label(class="form-check-label") }}

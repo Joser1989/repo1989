@@ -1,17 +1,15 @@
--- Esquema de la base de datos SQLite del proyecto AL WORK (data/alwork.db)
+-- Esquema de la base de datos PostgreSQL del proyecto AL WORK (alwork_db)
 -- Se ejecuta automáticamente al iniciar la app (init_db en conexion/conexion.py).
 
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE IF NOT EXISTS proveedores (
-    id_proveedor INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_proveedor SERIAL PRIMARY KEY,
     nombre       TEXT NOT NULL,
     telefono     TEXT,
     correo       TEXT
 );
 
 CREATE TABLE IF NOT EXISTS productos (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    id           SERIAL PRIMARY KEY,
     nombre       TEXT NOT NULL,
     precio       REAL NOT NULL,
     imagen       TEXT NOT NULL,
@@ -22,7 +20,7 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 
 CREATE TABLE IF NOT EXISTS clientes (
-    id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_cliente SERIAL PRIMARY KEY,
     nombre     TEXT NOT NULL,
     cedula     TEXT UNIQUE,
     telefono   TEXT,
@@ -30,7 +28,7 @@ CREATE TABLE IF NOT EXISTS clientes (
 );
 
 CREATE TABLE IF NOT EXISTS facturas (
-    id_factura INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_factura SERIAL PRIMARY KEY,
     id_cliente INTEGER,
     fecha      TEXT NOT NULL,
     total      REAL NOT NULL,
@@ -42,7 +40,7 @@ CREATE TABLE IF NOT EXISTS facturas (
 -- El campo "password" NUNCA guarda texto plano: siempre un hash generado
 -- con generate_password_hash() (Werkzeug) antes del INSERT.
 CREATE TABLE IF NOT EXISTS usuarios (
-    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    id       SERIAL PRIMARY KEY,
     usuario  TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
 );
@@ -55,3 +53,12 @@ WHERE NOT EXISTS (SELECT 1 FROM proveedores WHERE nombre = 'Almacenes José Pueb
 INSERT INTO proveedores (nombre, telefono, correo)
 SELECT 'Lindtex', '022987654', 'ventas@lindtex.com'
 WHERE NOT EXISTS (SELECT 1 FROM proveedores WHERE nombre = 'Lindtex');
+-- Ampliación de columnas para que coincidan con los formularios existentes
+ALTER TABLE proveedores ADD COLUMN IF NOT EXISTS tipo TEXT;
+ALTER TABLE proveedores ADD COLUMN IF NOT EXISTS ciudad TEXT;
+
+ALTER TABLE clientes ADD COLUMN IF NOT EXISTS tipo TEXT;
+ALTER TABLE clientes ADD COLUMN IF NOT EXISTS ciudad TEXT;
+
+ALTER TABLE facturas ADD COLUMN IF NOT EXISTS numero TEXT;
+ALTER TABLE facturas ADD COLUMN IF NOT EXISTS detalle TEXT;

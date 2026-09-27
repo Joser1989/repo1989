@@ -14,6 +14,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ p.nombre }}</h5>
           <p class="card-text">{{ p.descripcion }}</p>
+          <p class="text-muted small mb-1">Proveedor: {{ p.proveedor_nombre or "Sin asignar" }}</p>
           {% if p.disponible %}
             <p class="precio-tag">${{ "%.2f"|format(p.precio) }}</p>
           {% else %}

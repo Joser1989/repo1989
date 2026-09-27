@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, TextAreaField, BooleanField, SubmitField
+from wtforms import StringField, DecimalField, TextAreaField, BooleanField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange
 
 
@@ -34,5 +34,13 @@ class ProductoForm(FlaskForm):
     )
 
     disponible = BooleanField('Disponible')
+
+    # Las choices se llenan dinámicamente en app.py con los proveedores
+    # que existan en ese momento en PostgreSQL.
+    id_proveedor = SelectField(
+        'Proveedor',
+        coerce=int,
+        validators=[DataRequired(message='Debe seleccionar un proveedor.')]
+    )
 
     submit = SubmitField('Guardar producto')

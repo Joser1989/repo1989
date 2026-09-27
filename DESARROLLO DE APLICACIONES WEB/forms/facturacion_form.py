@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, SubmitField
+from wtforms import StringField, DecimalField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange, Regexp
 
 
@@ -15,10 +15,12 @@ class FacturacionForm(FlaskForm):
                     Regexp(r'^\d+$', message='El número de factura debe contener solo dígitos.')]
     )
 
-    cliente = StringField(
+    # Las choices se llenan dinámicamente en app.py con los clientes
+    # que existan en ese momento en PostgreSQL.
+    id_cliente = SelectField(
         'Cliente',
-        validators=[DataRequired(message='El cliente es obligatorio.'),
-                    Length(min=3, max=80, message='El nombre del cliente debe tener entre 3 y 80 caracteres.')]
+        coerce=int,
+        validators=[DataRequired(message='Debe seleccionar un cliente.')]
     )
 
     prenda = StringField(
