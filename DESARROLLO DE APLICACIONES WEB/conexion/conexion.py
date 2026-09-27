@@ -9,7 +9,7 @@ DB_CONFIG_LOCAL = {
     'port': '5432',
     'dbname': 'alwork_db',
     'user': 'postgres',
-    'password': '0705443539' 
+    'password': os.environ.get('DB_PASSWORD_LOCAL', '')
 }
 
 # En Render, la variable de entorno DATABASE_URL contiene toda la conexión
